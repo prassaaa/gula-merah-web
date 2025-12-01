@@ -1,0 +1,253 @@
+faktur_distribusi,id_pelanggan,tanggal,nama_pelanggan,lokasi_pelanggan,jenis_gula,jarak_kirim_km,jumlah_kg,jenis_kendaraan,biaya_bahan_bakar,biaya_tenaga_kerja,biaya_tambahan,total_biaya_distribusi
+INV-KR-GT-20240714-001,CUS-SUN-001,14 Juli 2024,sun,lumajang,gula tebu,171,4.820,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240715-001,CUS-SUN-001,15 Juli 2024,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240716-001,CUS-SUN-001,16 Juli 2024,sun,lumajang,gula tebu,171,3.825,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240717-001,CUS-SUN-001,17 Juli 2024,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240718-001,CUS-SUN-001,18 Juli 2024,sun,lumajang,gula tebu,171,3.400,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240719-001,CUS-SUN-001,19 Juli 2024,sun,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240720-001,CUS-SUN-001,20 Juli 2024,sun,lumajang,gula tebu,171,3.400,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240721-001,CUS-SUN-001,21 Juli 2024,sun,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240722-001,CUS-SUN-001,22 Juli 2024,sun,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240723-001,CUS-SUN-001,23 Juli 2024,sun,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240724-001,CUS-SUN-001,24 Juli 2024,sun,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240725-001,CUS-DANNY-002,25 Juli 2024,danny,jombang,gula tebu,49,3.500,pick up,Rp150.000,Rp150.000,Rp0,Rp300.000
+INV-KR-GT-4 Aug 2024-001,CUS-MULIK-003,4 Aug 2024,mulik,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-5 Aug 2024-001,CUS-MAHFUD-004,5 Aug 2024,mahfud,malang,gula kelapa,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GK-6 Aug 2024-001,CUS-MULIK-003,6 Aug 2024,mulik,lumajang,gula kelapa,171,3.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-7 Aug 2024-001,CUS-MULIK-003,7 Aug 2024,mulik,lumajang,gula tebu,171,2.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-8 Aug 2024-001,CUS-MAHFUD-004,8 Aug 2024,mahfud,malang,gula tebu,82,2.450,truk sedang,Rp280.000,Rp280.000,Rp0,Rp560.000
+INV-KR-GT-9 Aug 2024-001,CUS-DANNY-002,9 Aug 2024,danny,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-10 Aug 2024-001,CUS-MAHFUD-004,10 Aug 2024,mahfud,malang,gula tebu,82,5.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-11 Aug 2024-001,CUS-MULIK-003,11 Aug 2024,mulik,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-12 Aug 2024-001,CUS-MAHFUD-004,12 Aug 2024,mahfud,malang,gula kelapa,82,1.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-13 Aug 2024-001,CUS-SUN-001,13 Aug 2024,sun,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-14 Aug 2024-001,CUS-MAHFUD-004,14 Aug 2024,mahfud,malang,gula tebu,82,4.475,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GK-15 Aug 2024-001,CUS-MULIK-003,15 Aug 2024,mulik,lumajang,gula kelapa,171,2.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-16 Aug 2024-001,CUS-MULIK-003,16 Aug 2024,mulik,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-17 Aug 2024-001,CUS-DANNY-002,17 Aug 2024,danny,jombang,gula kelapa,48,1.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GK-18 Aug 2024-001,CUS-MULIK-003,18 Aug 2024,mulik,lumajang,gula kelapa,171,1.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-19 Aug 2024-001,CUS-MAHFUD-004,19 Aug 2024,mahfud,malang,gula tebu,82,4.250,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20 Aug 2024-001,CUS-MAHFUD-004,20 Aug 2024,mahfud,malang,gula tebu,82,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-21 Aug 2024-001,CUS-DANNY-002,21 Aug 2024,danny,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GK-22 Aug 2024-001,CUS-MAHFUD-004,22 Aug 2024,mahfud,malang,gula kelapa,82,1.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GK-23 Aug 2024-001,CUS-MAHFUD-004,23 Aug 2024,mahfud,malang,gula kelapa,82,1.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-24 Aug 2024-001,CUS-DANNY-002,24 Aug 2024,danny,jombang,gula tebu,48,2.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-25 Aug 2024-001,CUS-DANNY-002,25 Aug 2024,danny,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-26 Aug 2024-001,CUS-DANNY-002,26 Aug 2024,danny,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-27 Aug 2024-001,CUS-MULIK-003,27 Aug 2024,mulik,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-28 Aug 2024-001,CUS-MAHFUD-004,28 Aug 2024,mahfud,malang,gula kelapa,82,700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-29 Aug 2024-001,CUS-MULIK-003,29 Aug 2024,mulik,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-30 Aug 2024-001,CUS-MAHFUD-004,30 Aug 2024,mahfud,malang,gula kelapa,82,500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GK-31 Aug 2024-001,CUS-SUN-001,31 Aug 2024,sun,lumajang,gula kelapa,171,1.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240901-001,CUS-DANNY-002,1 Sep 2024,danny,jombang,gula tebu,48,4.000,pick up,Rp150.000,Rp150.000,Rp0,Rp300.000
+INV-KR-GTC-20240902-001,CUS-JUMROTIN-005,2 Sep 2024,jumrotin,jombang,gula tebu ceplik,48,2.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20240903-001,CUS-SUN-001,3 Sep 2024,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240904-001,CUS-MULIK-003,4 Sep 2024,mulik,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240905-001,CUS-RIYANTO-006,5 Sep 2024,riyanto,jombang,gula tebu,48,4.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20240906-001,CUS-JUMROTIN-005,6 Sep 2024,jumrotin,jombang,gula tebu ceplik,48,1.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20240907-001,CUS-AGUS-007,7 Sep 2024,agus,pare,gula tebu ceplik,26,2.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTT-20240908-001,CUS-SITI-008,8 Sep 2024,siti,surabaya,gula tebu tanggung,136,1.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20240909-001,CUS-YAYANG-009,9 Sep 2024,yayang,pare,gula tebu tanggung,26,2.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20240910-001,CUS-MULIK-003,10 Sep 2024,mulik,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240911-001,CUS-RIYANTO-006,11 Sep 2024,riyanto,jombang,gula tebu,48,3.550,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20240912-001,CUS-JUMROTIN-005,12 Sep 2024,jumrotin,jombang,gula tebu ceplik,48,1.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20240913-001,CUS-SUN-001,13 Sep 2024,sun,lumajang,gula tebu,171,3.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20240914-001,CUS-YAYANG-009,14 Sep 2024,yayang,pare,gula tebu tanggung,26,550,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20240915-001,CUS-RIYANTO-006,15 Sep 2024,riyanto,jombang,gula tebu,48,3.550,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20240916-001,CUS-MAHFUD-004,16 Sep 2024,mahfud,malang,gula tebu,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20240917-001,CUS-SLAMET-010,17 Sep 2024,slamet,lumajang,gula tebu tanggung,171,850,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240918-001,CUS-DANNY-002,18 Sep 2024,danny,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20240919-001,CUS-YAYANG-009,19 Sep 2024,yayang,pare,gula tebu tanggung,26,1.550,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20240920-001,CUS-MAHFUD-004,20 Sep 2024,mahfud,malang,gula tebu,82,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20240921-001,CUS-MULIK-003,21 Sep 2024,mulik,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-20240922-001,CUS-AGUS-007,22 Sep 2024,agus,pare,gula tebu ceplik,26,950,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20240923-001,CUS-RIYANTO-006,23 Sep 2024,riyanto,jombang,gula tebu,48,3.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20240924-001,CUS-RIYANTO-006,24 Sep 2024,riyanto,jombang,gula tebu,48,4.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20240925-001,CUS-SLAMET-010,25 Sep 2024,slamet,lumajang,gula tebu tanggung,171,1.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240926-001,CUS-SUN-001,26 Sep 2024,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20240927-001,CUS-MAHFUD-004,27 Sep 2024,mahfud,malang,gula tebu,82,4.600,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20240928-001,CUS-DANNY-002,28 Sep 2024,danny,jombang,gula tebu,48,4.600,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20240929-001,CUS-YAYANG-009,29 Sep 2024,yayang,pare,gula tebu tanggung,26,900,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTC-20240930-001,CUS-AGUS-007,30 Sep 2024,agus,pare,gula tebu ceplik,26,750,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTT-1 Oct 2024-001,CUS-SITI-008,1 Oct 2024,siti,surabaya,gula tebu tanggung,136,800,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-2 Oct 2024-001,CUS-AGUS-007,2 Oct 2024,agus,pare,gula tebu ceplik,26,550,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-3 Oct 2024-001,CUS-MULIK-003,3 Oct 2024,mulik,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-4 Oct 2024-001,CUS-SITI-008,4 Oct 2024,siti,surabaya,gula tebu tanggung,136,550,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-5 Oct 2024-001,CUS-MAHFUD-004,5 Oct 2024,mahfud,malang,gula tebu,82,5.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-6 Oct 2024-001,CUS-BINASIKIN-011,6 Oct 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-7 Oct 2024-001,CUS-SUN-001,7 Oct 2024,sun,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-8 Oct 2024-001,CUS-SLAMET-010,8 Oct 2024,slamet,lumajang,gula tebu tanggung,171,550,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-9 Oct 2024-001,CUS-BINASIKIN-011,9 Oct 2024,binasikin,surabaya,gula tebu,136,4.800,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-10 Oct 2024-001,CUS-RIYANTO-006,10 Oct 2024,riyanto,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-11 Oct 2024-001,CUS-JUMROTIN-005,11 Oct 2024,jumrotin,jombang,gula tebu ceplik,48,460,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-12 Oct 2024-001,CUS-RIYANTO-006,12 Oct 2024,riyanto,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-13 Oct 2024-001,CUS-SUN-001,13 Oct 2024,sun,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-14 Oct 2024-001,CUS-MULIK-003,14 Oct 2024,mulik,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-15 Oct 2024-001,CUS-DANNY-002,15 Oct 2024,danny,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-16 Oct 2024-001,CUS-SITI-008,16 Oct 2024,siti,surabaya,gula tebu tanggung,136,3.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-17 Oct 2024-001,CUS-BINASIKIN-011,17 Oct 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-18 Oct 2024-001,CUS-BINASIKIN-011,18 Oct 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-19 Oct 2024-001,CUS-MAHFUD-004,19 Oct 2024,mahfud,malang,gula tebu,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20 Oct 2024-001,CUS-MAHFUD-004,20 Oct 2024,mahfud,malang,gula tebu,82,4.600,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-21 Oct 2024-001,CUS-RIYANTO-006,21 Oct 2024,riyanto,jombang,gula tebu,48,3.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-22 Oct 2024-001,CUS-SLAMET-010,22 Oct 2024,slamet,lumajang,gula tebu tanggung,171,2.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-23 Oct 2024-001,CUS-AGUS-007,23 Oct 2024,agus,pare,gula tebu ceplik,26,2.000,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-24 Oct 2024-001,CUS-SUN-001,24 Oct 2024,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-25 Oct 2024-001,CUS-BINASIKIN-011,25 Oct 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp50.000,Rp530.000
+INV-KR-GT-26 Oct 2024-001,CUS-SUN-001,26 Oct 2024,sun,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-27 Oct 2024-001,CUS-BINASIKIN-011,27 Oct 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-28 Oct 2024-001,CUS-MAHFUD-004,28 Oct 2024,mahfud,malang,gula tebu,82,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-29 Oct 2024-001,CUS-MAHFUD-004,29 Oct 2024,mahfud,malang,gula tebu,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-30 Oct 2024-001,CUS-RIYANTO-006,30 Oct 2024,riyanto,jombang,gula tebu,48,4.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-31 Oct 2024-001,CUS-SLAMET-010,31 Oct 2024,slamet,lumajang,gula tebu tanggung,171,2.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241101-001,CUS-BINASIKIN-011,1 Nov 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20241102-001,CUS-SLAMET-010,2 Nov 2024,slamet,lumajang,gula tebu tanggung,171,1.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241103-001,CUS-MULIK-003,3 Nov 2024,mulik,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241104-001,CUS-MAHFUD-004,4 Nov 2024,mahfud,malang,gula tebu,82,4.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20241105-001,CUS-SITI-008,5 Nov 2024,siti,surabaya,gula tebu tanggung,136,1.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20241106-001,CUS-YAYANG-009,6 Nov 2024,yayang,pare,gula tebu tanggung,26,1.000,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20241107-001,CUS-RIYANTO-006,7 Nov 2024,riyanto,jombang,gula tebu,48,4.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20241108-001,CUS-MAHFUD-004,8 Nov 2024,mahfud,malang,gula tebu,82,4.850,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20241109-001,CUS-SUN-001,9 Nov 2024,sun,lumajang,gula tebu,171,4.075,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241110-001,CUS-BINASIKIN-011,10 Nov 2024,binasikin,surabaya,gula tebu,136,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20241111-001,CUS-SUN-001,11 Nov 2024,sun,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241112-001,CUS-BINASIKIN-011,12 Nov 2024,binasikin,surabaya,gula tebu,136,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-20241113-001,CUS-JUMROTIN-005,13 Nov 2024,jumrotin,jombang,gula tebu ceplik,48,1.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20241114-001,CUS-SLAMET-010,14 Nov 2024,slamet,lumajang,gula tebu tanggung,171,1.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241115-001,CUS-SUN-001,15 Nov 2024,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20241116-001,CUS-SITI-008,16 Nov 2024,siti,surabaya,gula tebu tanggung,136,2.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20241117-001,CUS-SITI-008,17 Nov 2024,siti,surabaya,gula tebu tanggung,136,2.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20241118-001,CUS-SITI-008,18 Nov 2024,siti,surabaya,gula tebu tanggung,136,2.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20241119-001,CUS-MAHFUD-004,19 Nov 2024,mahfud,malang,gula tebu,82,4.700,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-20241120-001,CUS-JUMROTIN-005,20 Nov 2024,jumrotin,jombang,gula tebu ceplik,48,1.550,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20241121-001,CUS-JUMROTIN-005,21 Nov 2024,jumrotin,jombang,gula tebu ceplik,48,1.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20241122-001,CUS-SLAMET-010,22 Nov 2024,slamet,lumajang,gula tebu tanggung,171,2.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241123-001,CUS-DANNY-002,23 Nov 2024,danny,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20241124-001,CUS-BINASIKIN-011,24 Nov 2024,binasikin,surabaya,gula tebu,136,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20241125-001,CUS-MULIK-003,25 Nov 2024,mulik,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20241126-001,CUS-RIYANTO-006,26 Nov 2024,riyanto,jombang,gula tebu,48,4.525,pick up,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20241127-001,CUS-YAYANG-009,27 Nov 2024,yayang,pare,gula tebu tanggung,26,1.000,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20241128-001,CUS-RIYANTO-006,28 Nov 2024,riyanto,jombang,gula tebu,48,4.600,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20241129-001,CUS-JUMROTIN-005,29 Nov 2024,jumrotin,jombang,gula tebu ceplik,48,2.225,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20241130-001,CUS-DANNY-002,30 Nov 2024,danny,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-1 Dec 2024-001,CUS-MULIK-003,1 Dec 2024,mulik,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-2 Dec 2024-001,CUS-AGUS-007,2 Dec 2024,agus,pare,gula tebu ceplik,26,1.000,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTT-3 Dec 2024-001,CUS-SLAMET-010,3 Dec 2024,slamet,lumajang,gula tebu tanggung,171,1.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-4 Dec 2024-001,CUS-SUN-001,4 Dec 2024,sun,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-5 Dec 2024-001,CUS-YAYANG-009,5 Dec 2024,yayang,pare,gula tebu tanggung,26,550,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-6 Dec 2024-001,CUS-MULIK-003,6 Dec 2024,mulik,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-7 Dec 2024-001,CUS-AGUS-007,7 Dec 2024,agus,pare,gula tebu ceplik,26,1.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTC-8 Dec 2024-001,CUS-JUMROTIN-005,8 Dec 2024,jumrotin,jombang,gula tebu ceplik,48,750,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-9 Dec 2024-001,CUS-RIYANTO-006,9 Dec 2024,riyanto,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-10 Dec 2024-001,CUS-MAHFUD-004,10 Dec 2024,mahfud,malang,gula tebu,82,4.250,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-11 Dec 2024-001,CUS-MAHFUD-004,11 Dec 2024,mahfud,malang,gula tebu,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-12 Dec 2024-001,CUS-SUN-001,12 Dec 2024,sun,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-13 Dec 2024-001,CUS-YAYANG-009,13 Dec 2024,yayang,pare,gula tebu tanggung,26,1.000,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTT-14 Dec 2024-001,CUS-SLAMET-010,14 Dec 2024,slamet,lumajang,gula tebu tanggung,171,550,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-15 Dec 2024-001,CUS-YAYANG-009,15 Dec 2024,yayang,pare,gula tebu tanggung,26,750,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-16 Dec 2024-001,CUS-MAHFUD-004,16 Dec 2024,mahfud,malang,gula tebu,82,4.200,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-17 Dec 2024-001,CUS-JUMROTIN-005,17 Dec 2024,jumrotin,jombang,gula tebu ceplik,48,2.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-18 Dec 2024-001,CUS-YAYANG-009,18 Dec 2024,yayang,pare,gula tebu tanggung,26,1.000,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-19 Dec 2024-001,CUS-DANNY-002,19 Dec 2024,danny,jombang,gula tebu,48,4.700,truk sedang,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20 Dec 2024-001,CUS-SITI-008,20 Dec 2024,siti,surabaya,gula tebu tanggung,136,1.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-21 Dec 2024-001,CUS-SLAMET-010,21 Dec 2024,slamet,lumajang,gula tebu tanggung,171,1.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-22 Dec 2024-001,CUS-RIYANTO-006,22 Dec 2024,riyanto,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp0,Rp300.000
+INV-KR-GT-23 Dec 2024-001,CUS-SUN-001,23 Dec 2024,sun,lumajang,gula tebu,48,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-24 Dec 2024-001,CUS-RIYANTO-006,24 Dec 2024,riyanto,jombang,gula tebu,48,4.300,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-25 Dec 2024-001,CUS-SITI-008,25 Dec 2024,siti,surabaya,gula tebu tanggung,136,550,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-26 Dec 2024-001,CUS-MULIK-003,26 Dec 2024,mulik,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-27 Dec 2024-001,CUS-BINASIKIN-011,27 Dec 2024,binasikin,surabaya,gula tebu,136,4.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-28 Dec 2024-001,CUS-YAYANG-009,28 Dec 2024,yayang,pare,gula tebu tanggung,26,750,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-29 Dec 2024-001,CUS-SUN-001,29 Dec 2024,sun,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-30 Dec 2024-001,CUS-SUN-001,30 Dec 2024,sun,lumajang,gula tebu,171,4.700,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-31 Dec 2024-001,CUS-SLAMET-010,31 Dec 2024,slamet,lumajang,gula tebu tanggung,171,2.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250101-001,CUS-MULIK-003,1 Jan 2025,mulik,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-20250102-001,CUS-JUMROTIN-005,2 Jan 2025,jumrotin,jombang,gula tebu ceplik,48,1.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250103-001,CUS-SITI-008,3 Jan 2025,siti,surabaya,gula tebu tanggung,136,450,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250104-001,CUS-DANNY-002,4 Jan 2025,danny,jombang,gula tebu,48,4.800,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250105-001,CUS-SITI-008,5 Jan 2025,siti,surabaya,gula tebu tanggung,136,750,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250106-001,CUS-BINASIKIN-011,6 Jan 2025,binasikin,surabaya,gula tebu,136,4.400,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20250107-001,CUS-SITI-008,7 Jan 2025,siti,surabaya,gula tebu tanggung,136,1.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250108-001,CUS-BINASIKIN-011,8 Jan 2025,binasikin,surabaya,gula tebu,136,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250109-001,CUS-MULIK-003,9 Jan 2025,mulik,lumajang,gula tebu,171,4.800,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250110-001,CUS-DANNY-002,10 Jan 2025,danny,jombang,gula tebu,48,4.550,pick up,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-20250111-001,CUS-JUMROTIN-005,11 Jan 2025,jumrotin,jombang,gula tebu ceplik,48,3.000,pick up,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250112-001,CUS-MULIK-003,12 Jan 2025,mulik,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20250113-001,CUS-SLAMET-010,13 Jan 2025,slamet,lumajang,gula tebu tanggung,171,250,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-20250114-001,CUS-AGUS-007,14 Jan 2025,agus,pare,gula tebu ceplik,26,330,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTT-20250115-001,CUS-SLAMET-010,15 Jan 2025,slamet,lumajang,gula tebu tanggung,171,550,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250116-001,CUS-MAHFUD-004,16 Jan 2025,mahfud,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20250117-001,CUS-YAYANG-009,17 Jan 2025,yayang,pare,gula tebu tanggung,26,1.440,pick up,Rp100.000,Rp50.000,Rp0,Rp150.000
+INV-KR-GT-20250118-001,CUS-RIYANTO-006,18 Jan 2025,riyanto,jombang,gula tebu,48,4.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250119-001,CUS-MAHFUD-004,19 Jan 2025,mahfud,malang,gula tebu,82,4.250,pick up,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20250120-001,CUS-YAYANG-009,20 Jan 2025,yayang,pare,gula tebu tanggung,26,2.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250121-001,CUS-RIYANTO-006,21 Jan 2025,riyanto,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250122-001,CUS-BINASIKIN-011,22 Jan 2025,binasikin,surabaya,gula tebu,136,4.600,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20250123-001,CUS-SITI-008,23 Jan 2025,siti,surabaya,gula tebu tanggung,136,400,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-20250124-001,CUS-JUMROTIN-005,24 Jan 2025,jumrotin,jombang,gula tebu ceplik,48,2.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250125-001,CUS-RIYANTO-006,25 Jan 2025,riyanto,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250126-001,CUS-YAYANG-009,26 Jan 2025,yayang,pare,gula tebu tanggung,26,4.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTC-20250127-001,CUS-AGUS-007,27 Jan 2025,agus,pare,gula tebu ceplik,26,450,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250128-001,CUS-SUN-001,28 Jan 2025,sun,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20250129-001,CUS-SITI-008,29 Jan 2025,siti,surabaya,gula tebu tanggung,136,400,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250130-001,CUS-MULIK-003,30 Jan 2025,mulik,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250131-001,CUS-MULIK-003,31 Jan 2025,mulik,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20250201-001,CUS-SLAMET-010,1 Feb 2025,slamet,lumajang,gula tebu tanggung,171,1.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250202-001,CUS-DANNY-002,2 Feb 2025,danny,jombang,gula tebu,48,4.600,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250203-001,CUS-YAYANG-009,3 Feb 2025,yayang,pare,gula tebu tanggung,26,1.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250204-001,CUS-BINASIKIN-011,4 Feb 2025,binasikin,surabaya,gula tebu,136,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20250205-001,CUS-YAYANG-009,5 Feb 2025,yayang,pare,gula tebu tanggung,26,750,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250206-001,CUS-SUN-001,6 Feb 2025,sun,lumajang,gula tebu,171,4.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250207-001,CUS-RIYANTO-006,7 Feb 2025,riyanto,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250208-001,CUS-SITI-008,8 Feb 2025,siti,surabaya,gula tebu tanggung,136,650,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250209-001,CUS-MAHFUD-004,9 Feb 2025,mahfud,malang,gula tebu,82,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250210-001,CUS-RIYANTO-006,10 Feb 2025,riyanto,jombang,gula tebu,48,4.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250211-001,CUS-MAHFUD-004,11 Feb 2025,mahfud,malang,gula tebu,82,3.500,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250212-001,CUS-RIYANTO-006,12 Feb 2025,riyanto,jombang,gula tebu,48,3.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250213-001,CUS-YAYANG-009,13 Feb 2025,yayang,pare,gula tebu tanggung,26,750,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250214-001,CUS-MULIK-003,14 Feb 2025,mulik,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250215-001,CUS-MAHFUD-004,15 Feb 2025,mahfud,malang,gula tebu,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250216-001,CUS-SUN-001,16 Feb 2025,sun,lumajang,gula tebu,171,3.900,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250217-001,CUS-MAHFUD-004,17 Feb 2025,mahfud,malang,gula tebu,82,3.800,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250218-001,CUS-MULIK-003,18 Feb 2025,mulik,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250219-001,CUS-RIYANTO-006,19 Feb 2025,riyanto,jombang,gula tebu,48,4.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250220-001,CUS-RIYANTO-006,20 Feb 2025,riyanto,jombang,gula tebu,48,4.300,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20250221-001,CUS-AGUS-007,21 Feb 2025,agus,pare,gula tebu ceplik,26,250,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTC-20250222-001,CUS-AGUS-007,22 Feb 2025,agus,pare,gula tebu ceplik,26,950,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250223-001,CUS-SUN-001,23 Feb 2025,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTT-20250224-001,CUS-SITI-008,24 Feb 2025,siti,surabaya,gula tebu tanggung,136,750,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250225-001,CUS-RIYANTO-006,25 Feb 2025,riyanto,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250226-001,CUS-SLAMET-010,26 Feb 2025,slamet,lumajang,gula tebu tanggung,171,750,pick up,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GTC-20250227-001,CUS-AGUS-007,27 Feb 2025,agus,pare,gula tebu ceplik,26,950,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GTC-20250228-001,CUS-JUMROTIN-005,28 Feb 2025,jumrotin,jombang,gula tebu ceplik,48,550,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20250301-001,CUS-JUMROTIN-005,1 Mar 2025,jumrotin,jombang,gula tebu ceplik,48,650,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250302-001,CUS-BINASIKIN-011,2 Mar 2025,binasikin,surabaya,gula tebu,136,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTT-20250303-001,CUS-SLAMET-010,3 Mar 2025,slamet,lumajang,gula tebu tanggung,171,450,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250304-001,CUS-RIYANTO-006,4 Mar 2025,riyanto,jombang,gula tebu,48,4.500,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250305-001,CUS-RIYANTO-006,5 Mar 2025,riyanto,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250306-001,CUS-SUN-001,6 Mar 2025,sun,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250307-001,CUS-DANNY-002,7 Mar 2025,danny,jombang,gula tebu,48,4.300,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTT-20250308-001,CUS-YAYANG-009,8 Mar 2025,yayang,pare,gula tebu tanggung,26,1.500,pick up,Rp100.000,Rp50.000,Rp50.000,Rp200.000
+INV-KR-GT-20250309-001,CUS-MAHFUD-004,9 Mar 2025,mahfud,malang,gula tebu,82,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250310-001,CUS-RIYANTO-006,10 Mar 2025,riyanto,jombang,gula tebu,48,4.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250311-001,CUS-RIYANTO-006,11 Mar 2025,riyanto,jombang,gula tebu,48,4.200,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250312-001,CUS-MAHFUD-004,12 Mar 2025,mahfud,malang,gula tebu,82,4.000,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250313-001,CUS-DANNY-002,13 Mar 2025,danny,jombang,gula tebu,48,4.700,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250314-001,CUS-SUN-001,14 Mar 2025,sun,lumajang,gula tebu,171,4.600,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250315-001,CUS-MULIK-003,15 Mar 2025,mulik,lumajang,gula tebu,171,4.000,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250316-001,CUS-DANNY-002,16 Mar 2025,danny,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GTC-20250317-001,CUS-JUMROTIN-005,17 Mar 2025,jumrotin,jombang,gula tebu ceplik,48,2.240,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250318-001,CUS-MAHFUD-004,18 Mar 2025,mahfud,malang,gula tebu,82,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GTC-20250319-001,CUS-JUMROTIN-005,19 Mar 2025,jumrotin,jombang,gula tebu ceplik,48,430,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250320-001,CUS-MULIK-003,20 Mar 2025,mulik,lumajang,gula tebu,171,4.100,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-20250321-001,CUS-MAHFUD-004,21 Mar 2025,mahfud,malang,gula kelapa,82,1.000,pick up,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250322-001,CUS-MAHFUD-004,22 Mar 2025,mahfud,malang,gula tebu,82,4.100,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250323-001,CUS-DANNY-002,23 Mar 2025,danny,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250324-001,CUS-DANNY-002,24 Mar 2025,danny,jombang,gula tebu,48,4.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GK-20250325-001,CUS-MULIK-003,25 Mar 2025,mulik,lumajang,gula kelapa,171,1.500,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GK-20250326-001,CUS-MAHFUD-004,26 Mar 2025,mahfud,malang,gula kelapa,82,1.000,pick up,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GT-20250327-001,CUS-DANNY-002,27 Mar 2025,danny,jombang,gula tebu,48,4.100,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GK-20250328-001,CUS-MAHFUD-004,28 Mar 2025,mahfud,malang,gula kelapa,82,750,truk sedang,Rp280.000,Rp200.000,Rp0,Rp480.000
+INV-KR-GK-20250329-001,CUS-DANNY-002,29 Mar 2025,danny,jombang,gula kelapa,48,450,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
+INV-KR-GT-20250330-001,CUS-MULIK-003,30 Mar 2025,mulik,lumajang,gula tebu,171,4.550,truk sedang,Rp400.000,Rp400.000,Rp0,Rp800.000
+INV-KR-GT-20250331-001,CUS-DANNY-002,31 Mar 2025,danny,jombang,gula tebu,48,4.000,pick up,Rp150.000,Rp150.000,Rp50.000,Rp350.000
