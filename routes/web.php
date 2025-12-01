@@ -80,6 +80,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('distribusi', [ForecastController::class, 'distribusiIndex'])->name('distribusi');
             Route::post('distribusi/predict', [ForecastController::class, 'distribusiPredict'])->name('distribusi.predict');
             Route::post('distribusi/train', [ForecastController::class, 'distribusiTrain'])->name('distribusi.train');
+
+            // Fallback GET routes - redirect to main pages
+            Route::get('stok/predict', fn() => redirect()->route('forecast.stok'));
+            Route::get('distribusi/predict', fn() => redirect()->route('forecast.distribusi'));
+            Route::get('distribusi/train', fn() => redirect()->route('forecast.distribusi'));
         });
     });
 
