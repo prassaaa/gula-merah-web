@@ -4,6 +4,8 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\ForecastController;
+use App\Http\Controllers\HutangController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\StokController;
@@ -24,11 +26,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Master Data
     Route::resource('barang', BarangController::class);
     Route::resource('pelanggan', PelangganController::class);
+    Route::resource('karyawan', KaryawanController::class);
+    Route::patch('karyawan/{karyawan}/toggle-status', [KaryawanController::class, 'toggleStatus'])->name('karyawan.toggle-status');
 
     // Transaksi
     Route::resource('stok', StokController::class);
     Route::resource('penjualan', PenjualanController::class);
     Route::resource('distribusi', DistribusiController::class);
+    Route::resource('hutang', HutangController::class);
+    Route::post('hutang/{hutang}/bayar', [HutangController::class, 'bayar'])->name('hutang.bayar');
 
     // Forecasting
     Route::prefix('forecast')->name('forecast.')->group(function () {

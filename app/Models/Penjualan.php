@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penjualan extends Model
 {
@@ -23,6 +24,7 @@ class Penjualan extends Model
         'hutang',
         'pembayaran',
         'sisa_hutang',
+        'status',
         'keterangan',
     ];
 
@@ -58,5 +60,13 @@ class Penjualan extends Model
     public function barang(): BelongsTo
     {
         return $this->belongsTo(Barang::class);
+    }
+
+    /**
+     * Get all hutang records for this penjualan.
+     */
+    public function hutangs(): HasMany
+    {
+        return $this->hasMany(Hutang::class);
     }
 }

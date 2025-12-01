@@ -14,12 +14,14 @@ class Distribusi extends Model
      */
     protected $fillable = [
         'faktur_distribusi',
+        'faktur_penjualan',
         'pelanggan_id',
         'barang_id',
         'tanggal',
         'jarak_kirim_km',
         'jumlah_kg',
         'jenis_kendaraan',
+        'bahan_bakar_liter',
         'biaya_bahan_bakar',
         'biaya_tenaga_kerja',
         'biaya_tambahan',
@@ -38,6 +40,7 @@ class Distribusi extends Model
             'tanggal' => 'date',
             'jarak_kirim_km' => 'integer',
             'jumlah_kg' => 'decimal:2',
+            'bahan_bakar_liter' => 'decimal:2',
             'biaya_bahan_bakar' => 'decimal:2',
             'biaya_tenaga_kerja' => 'decimal:2',
             'biaya_tambahan' => 'decimal:2',

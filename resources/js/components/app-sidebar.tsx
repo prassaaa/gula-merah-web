@@ -16,12 +16,14 @@ import {
     BarChart3,
     BookOpen,
     Box,
+    CreditCard,
     Folder,
     LayoutGrid,
     Package,
     ShoppingCart,
     TrendingUp,
     Truck,
+    UserCheck,
     Users,
     Warehouse,
 } from 'lucide-react';
@@ -51,6 +53,11 @@ const navGroups: NavGroup[] = [
                 href: '/pelanggan',
                 icon: Users,
             },
+            {
+                title: 'Karyawan',
+                href: '/karyawan',
+                icon: UserCheck,
+            },
         ],
     },
     {
@@ -70,6 +77,11 @@ const navGroups: NavGroup[] = [
                 title: 'Distribusi',
                 href: '/distribusi',
                 icon: Truck,
+            },
+            {
+                title: 'Hutang',
+                href: '/hutang',
+                icon: CreditCard,
             },
         ],
     },

@@ -51,6 +51,7 @@ export interface Barang {
     harga_per_kg: number;
     harga_per_kg_formatted: string;
     satuan: string;
+    kategori: string | null;
     is_active: boolean;
     created_at: string;
     updated_at: string;
@@ -65,6 +66,17 @@ export interface Pelanggan {
     telepon: string | null;
     email: string | null;
     jarak_km: number;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Karyawan {
+    id: number;
+    nama_karyawan: string;
+    jabatan: string;
+    kontak: string | null;
+    alamat: string | null;
     is_active: boolean;
     created_at: string;
     updated_at: string;
@@ -105,9 +117,38 @@ export interface Penjualan {
     pembayaran_formatted: string;
     sisa_hutang: number;
     sisa_hutang_formatted: string;
+    status: 'lunas' | 'belum_lunas';
     keterangan: string | null;
     created_at: string;
     updated_at: string;
+}
+
+export interface Hutang {
+    id: number;
+    faktur_penjualan: string;
+    penjualan_id: number;
+    penjualan?: {
+        id: number;
+        tanggal_penjualan: string;
+        pelanggan: string;
+        barang: string;
+        total_harga: number;
+    };
+    tanggal: string;
+    nilai_faktur: number;
+    dp_bayar: number;
+    sisa_hutang: number;
+    status: 'lunas' | 'belum_lunas';
+    status_label: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface HutangSummary {
+    total_hutang: number;
+    total_belum_lunas: number;
+    total_lunas: number;
+    nilai_belum_lunas: number;
 }
 
 export type JenisKendaraan = 'pick_up' | 'truk_sedang' | 'truk_besar';
@@ -115,6 +156,7 @@ export type JenisKendaraan = 'pick_up' | 'truk_sedang' | 'truk_besar';
 export interface Distribusi {
     id: number;
     faktur_distribusi: string;
+    faktur_penjualan: string | null;
     pelanggan_id: number;
     pelanggan?: Pelanggan;
     barang_id: number;
@@ -123,6 +165,7 @@ export interface Distribusi {
     tanggal_formatted: string;
     jarak_kirim_km: number;
     jumlah_kg: number;
+    bahan_bakar_liter: number | null;
     jenis_kendaraan: JenisKendaraan;
     jenis_kendaraan_label: string;
     biaya_bahan_bakar: number;
