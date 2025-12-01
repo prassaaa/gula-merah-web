@@ -29,9 +29,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function MyPenjualanIndex({ penjualans, filters, statistics, pelanggan }: Props) {
-    const [search, setSearch] = useState(filters.search || '');
-    const [dariTanggal, setDariTanggal] = useState(filters.dari_tanggal || '');
-    const [sampaiTanggal, setSampaiTanggal] = useState(filters.sampai_tanggal || '');
+    const [search, setSearch] = useState(filters?.search || '');
+    const [dariTanggal, setDariTanggal] = useState(filters?.dari_tanggal || '');
+    const [sampaiTanggal, setSampaiTanggal] = useState(filters?.sampai_tanggal || '');
+
+    // Handle both Laravel pagination formats (with meta or direct)
+    const paginationData = penjualans?.meta || penjualans;
+    const lastPage = paginationData?.last_page || 1;
+    const links = paginationData?.links || [];
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -67,7 +72,7 @@ export default function MyPenjualanIndex({ penjualans, filters, statistics, pela
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Riwayat Pembelian</h1>
                     <p className="text-muted-foreground">
-                        Daftar pembelian Anda sebagai {pelanggan.nama}
+                        Daftar pembelian Anda sebagai {pelanggan?.nama || '-'}
                     </p>
                 </div>
 
@@ -149,7 +154,7 @@ export default function MyPenjualanIndex({ penjualans, filters, statistics, pela
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {penjualans.data.length === 0 ? (
+                                {(!penjualans?.data || penjualans.data.length === 0) ? (
                                     <TableRow>
                                         <TableCell colSpan={6} className="py-8 text-center">
                                             <p className="text-muted-foreground">Tidak ada data pembelian</p>
@@ -179,9 +184,9 @@ export default function MyPenjualanIndex({ penjualans, filters, statistics, pela
                 </Card>
 
                 {/* Pagination */}
-                {penjualans.meta.last_page > 1 && (
+                {lastPage > 1 && (
                     <div className="flex justify-center gap-2">
-                        {penjualans.meta.links.map((link, index) => (
+                        {links.map((link: { url: string | null; label: string; active: boolean }, index: number) => (
                             <Button
                                 key={index}
                                 variant={link.active ? 'default' : 'outline'}

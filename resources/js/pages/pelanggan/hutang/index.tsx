@@ -29,8 +29,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function MyHutangIndex({ hutangs, filters, statistics, pelanggan }: Props) {
-    const [search, setSearch] = useState(filters.search || '');
-    const [status, setStatus] = useState(filters.status || '');
+    const [search, setSearch] = useState(filters?.search || '');
+    const [status, setStatus] = useState(filters?.status || 'all');
+
+    // Handle both Laravel pagination formats (with meta or direct)
+    const paginationData = hutangs?.meta || hutangs;
+    const lastPage = paginationData?.last_page || 1;
+    const links = paginationData?.links || [];
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,7 +44,7 @@ export default function MyHutangIndex({ hutangs, filters, statistics, pelanggan 
 
     const handleStatusChange = (value: string) => {
         setStatus(value);
-        router.get('/my/hutang', { search, status: value }, { preserveState: true });
+        router.get('/my/hutang', { search, status: value === 'all' ? '' : value }, { preserveState: true });
     };
 
     const formatCurrency = (value: number) => {
@@ -67,7 +72,7 @@ export default function MyHutangIndex({ hutangs, filters, statistics, pelanggan 
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Hutang Saya</h1>
                     <p className="text-muted-foreground">
-                        Daftar hutang Anda sebagai {pelanggan.nama}
+                        Daftar hutang Anda sebagai {pelanggan?.nama || '-'}
                     </p>
                 </div>
 
@@ -114,7 +119,7 @@ export default function MyHutangIndex({ hutangs, filters, statistics, pelanggan 
                                     <SelectValue placeholder="Semua Status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">Semua Status</SelectItem>
+                                    <SelectItem value="all">Semua Status</SelectItem>
                                     <SelectItem value="belum_lunas">Belum Lunas</SelectItem>
                                     <SelectItem value="lunas">Lunas</SelectItem>
                                 </SelectContent>
@@ -140,7 +145,7 @@ export default function MyHutangIndex({ hutangs, filters, statistics, pelanggan 
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {hutangs.data.length === 0 ? (
+                                {(!hutangs?.data || hutangs.data.length === 0) ? (
                                     <TableRow>
                                         <TableCell colSpan={7} className="py-8 text-center">
                                             <p className="text-muted-foreground">Tidak ada data hutang</p>
@@ -181,9 +186,9 @@ export default function MyHutangIndex({ hutangs, filters, statistics, pelanggan 
                 </Card>
 
                 {/* Pagination */}
-                {hutangs.meta.last_page > 1 && (
+                {lastPage > 1 && (
                     <div className="flex justify-center gap-2">
-                        {hutangs.meta.links.map((link, index) => (
+                        {links.map((link: { url: string | null; label: string; active: boolean }, index: number) => (
                             <Button
                                 key={index}
                                 variant={link.active ? 'default' : 'outline'}

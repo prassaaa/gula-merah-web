@@ -109,10 +109,10 @@ class PelangganHutangController extends Controller
 
         // Filter by date range
         if ($request->filled('dari_tanggal')) {
-            $query->whereDate('tanggal_penjualan', '>=', $request->dari_tanggal);
+            $query->whereDate('tanggal', '>=', $request->dari_tanggal);
         }
         if ($request->filled('sampai_tanggal')) {
-            $query->whereDate('tanggal_penjualan', '<=', $request->sampai_tanggal);
+            $query->whereDate('tanggal', '<=', $request->sampai_tanggal);
         }
 
         // Search
@@ -123,13 +123,13 @@ class PelangganHutangController extends Controller
             });
         }
 
-        $penjualans = $query->orderBy('tanggal_penjualan', 'desc')
+        $penjualans = $query->orderBy('tanggal', 'desc')
             ->paginate(10)
             ->withQueryString();
 
         // Statistics
         $totalPembelian = Penjualan::where('pelanggan_id', $pelanggan->id)->count();
-        $totalNilai = Penjualan::where('pelanggan_id', $pelanggan->id)->sum('total_harga');
+        $totalNilai = Penjualan::where('pelanggan_id', $pelanggan->id)->sum('total_penjualan');
 
         return Inertia::render('pelanggan/penjualan/index', [
             'penjualans' => $penjualans,
