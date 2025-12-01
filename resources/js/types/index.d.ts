@@ -3,6 +3,8 @@ import { LucideIcon } from 'lucide-react';
 
 export interface Auth {
     user: User;
+    roles: string[];
+    permissions: string[];
 }
 
 export interface BreadcrumbItem {
@@ -127,13 +129,19 @@ export interface Hutang {
     id: number;
     faktur_penjualan: string;
     penjualan_id: number;
+    pelanggan_id?: number;
+    barang_id?: number;
     penjualan?: {
         id: number;
         tanggal_penjualan: string;
-        pelanggan: string;
-        barang: string;
+        pelanggan_id: number;
+        barang_id: number;
+        pelanggan?: Pelanggan;
+        barang?: Barang;
         total_harga: number;
     };
+    pelanggan?: Pelanggan;
+    barang?: Barang;
     tanggal: string;
     nilai_faktur: number;
     dp_bayar: number;

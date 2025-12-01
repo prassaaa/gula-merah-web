@@ -192,7 +192,7 @@ export default function HutangIndex({ hutangs, summary, filters }: Props) {
                                             {hutang.faktur_penjualan}
                                         </TableCell>
                                         <TableCell>{hutang.tanggal}</TableCell>
-                                        <TableCell>{hutang.penjualan?.pelanggan || '-'}</TableCell>
+                                        <TableCell>{hutang.penjualan?.pelanggan?.nama || '-'}</TableCell>
                                         <TableCell className="text-right">
                                             {formatCurrency(hutang.nilai_faktur)}
                                         </TableCell>

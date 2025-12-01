@@ -152,8 +152,3 @@ curl http://localhost:8000/api/distribution/info
 - **Password**: password
 
 ---
-
-## 📄 Lisensi
-
-MIT License
-

@@ -185,11 +185,11 @@ export default function HutangShow({ hutang }: Props) {
                                 <>
                                     <div>
                                         <p className="text-sm text-muted-foreground">Pelanggan</p>
-                                        <p className="font-medium">{hutang.penjualan.pelanggan}</p>
+                                        <p className="font-medium">{hutang.penjualan.pelanggan?.nama || '-'}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-muted-foreground">Barang</p>
-                                        <p className="font-medium">{hutang.penjualan.barang}</p>
+                                        <p className="font-medium">{hutang.penjualan.barang?.nama_barang || '-'}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-muted-foreground">Tanggal Penjualan</p>

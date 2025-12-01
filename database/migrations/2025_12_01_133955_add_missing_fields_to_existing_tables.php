@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Tambah field ke users: username, role
+        // 1. Tambah field ke users: username (role menggunakan Spatie Permission)
         Schema::table('users', function (Blueprint $table) {
             $table->string('username', 50)->unique()->after('name');
-            $table->enum('role', ['admin', 'karyawan', 'pemilik'])->default('karyawan')->after('password');
         });
 
         // 2. Tambah field ke barangs: kategori
@@ -40,7 +39,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['username', 'role']);
+            $table->dropColumn('username');
         });
 
         Schema::table('barangs', function (Blueprint $table) {
