@@ -24,8 +24,10 @@ class XGBoostService:
     def __init__(self):
         self.model = None
         self.label_encoder = LabelEncoder()
+        self.metrics = None
         self.model_path = Path(__file__).parent.parent / "models" / "xgboost_model.joblib"
         self.encoder_path = Path(__file__).parent.parent / "models" / "label_encoder.joblib"
+        self.metrics_path = Path(__file__).parent.parent / "models" / "xgboost_metrics.joblib"
         self._load_model()
 
     def _load_model(self):
@@ -33,12 +35,15 @@ class XGBoostService:
         if self.model_path.exists() and self.encoder_path.exists():
             self.model = joblib.load(self.model_path)
             self.label_encoder = joblib.load(self.encoder_path)
+        if self.metrics_path.exists():
+            self.metrics = joblib.load(self.metrics_path)
 
     def _save_model(self):
         """Save model to disk"""
         self.model_path.parent.mkdir(parents=True, exist_ok=True)
         joblib.dump(self.model, self.model_path)
         joblib.dump(self.label_encoder, self.encoder_path)
+        joblib.dump(self.metrics, self.metrics_path)
 
     def _prepare_features(self, features: DistribusiFeatures) -> np.ndarray:
         """Prepare features for prediction"""
@@ -81,11 +86,22 @@ class XGBoostService:
 
         # Evaluate
         y_pred = self.model.predict(X_test)
+        evaluation_samples = [
+            {
+                "actual": round(float(actual), 2),
+                "predicted": round(float(predicted), 2),
+            }
+            for actual, predicted in list(zip(y_test.tolist(), y_pred.tolist()))[:20]
+        ]
+
         metrics = {
             "mae": round(mean_absolute_error(y_test, y_pred), 2),
             "rmse": round(np.sqrt(mean_squared_error(y_test, y_pred)), 2),
             "r2_score": round(r2_score(y_test, y_pred), 4),
+            "training_count": len(data),
+            "evaluation_samples": evaluation_samples,
         }
+        self.metrics = metrics
 
         # Save model
         self._save_model()
@@ -120,10 +136,16 @@ class XGBoostService:
                 biaya_tambahan=round(biaya_tambahan, 2),
                 total_biaya=round(total_biaya, 2),
             ),
-            0.85,  # Confidence score placeholder
+            self._confidence_score(),
         )
+
+    def _confidence_score(self) -> float | None:
+        """Return confidence based on latest R2 score if available"""
+        if not self.metrics or self.metrics.get("r2_score") is None:
+            return None
+
+        return round(float(np.clip(self.metrics["r2_score"], 0, 1)), 4)
 
 
 # Singleton instance
 xgboost_service = XGBoostService()
-

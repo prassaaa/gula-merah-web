@@ -66,8 +66,15 @@ class ARIMAService:
 
         mae = mean_absolute_error(actuals, predictions)
         rmse = np.sqrt(mean_squared_error(actuals, predictions))
+        non_zero_mask = actuals != 0
+        mape = (
+            np.mean(np.abs((actuals[non_zero_mask] - predictions[non_zero_mask]) / actuals[non_zero_mask])) * 100
+            if non_zero_mask.any()
+            else None
+        )
 
         return {
+            "mape": round(float(mape), 2) if mape is not None else None,
             "mae": round(mae, 2),
             "rmse": round(rmse, 2),
             "aic": round(self.fitted_model.aic, 2),
@@ -112,4 +119,3 @@ class ARIMAService:
 
 # Singleton instance
 arima_service = ARIMAService()
-

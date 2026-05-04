@@ -162,7 +162,23 @@ class HutangController extends Controller
      */
     public function update(HutangRequest $request, Hutang $hutang)
     {
-        $hutang->update($request->validated());
+        $data = $request->validated();
+        $data['sisa_hutang'] = max(0, (float) $data['nilai_faktur'] - (float) $data['dp_bayar']);
+        $data['status'] = $data['sisa_hutang'] <= 0 ? 'lunas' : 'belum_lunas';
+
+        $hutang->update($data);
+
+        if ($hutang->penjualan) {
+            $hutang->penjualan->update([
+                'no_faktur' => $data['faktur_penjualan'],
+                'total_penjualan' => $data['nilai_faktur'],
+                'hutang' => $data['nilai_faktur'],
+                'pembayaran' => $data['dp_bayar'],
+                'sisa_hutang' => $data['sisa_hutang'],
+                'status' => $data['status'],
+                'metode_pembayaran' => 'hutang',
+            ]);
+        }
 
         return redirect()->route('hutang.index')
             ->with('success', 'Hutang berhasil diperbarui.');
@@ -209,6 +225,7 @@ class HutangController extends Controller
                 'pembayaran' => $newDpBayar,
                 'sisa_hutang' => max(0, $newSisaHutang),
                 'status' => $newStatus,
+                'metode_pembayaran' => 'hutang',
             ]);
         }
 

@@ -41,9 +41,9 @@ class DistribusiController extends Controller
     public function store(DistribusiRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['biaya_bahan_bakar'] = $data['biaya_bahan_bakar'] ?? 0;
-        $data['biaya_tenaga_kerja'] = $data['biaya_tenaga_kerja'] ?? 0;
-        $data['biaya_tambahan'] = $data['biaya_tambahan'] ?? 0;
+        $data['biaya_bahan_bakar'] = $this->normalizeRupiah($data['biaya_bahan_bakar'] ?? 0);
+        $data['biaya_tenaga_kerja'] = $this->normalizeRupiah($data['biaya_tenaga_kerja'] ?? 0);
+        $data['biaya_tambahan'] = $this->normalizeRupiah($data['biaya_tambahan'] ?? 0);
         $data['total_biaya_distribusi'] = $data['biaya_bahan_bakar'] + $data['biaya_tenaga_kerja'] + $data['biaya_tambahan'];
 
         Distribusi::create($data);
@@ -76,9 +76,9 @@ class DistribusiController extends Controller
     public function update(DistribusiRequest $request, Distribusi $distribusi): RedirectResponse
     {
         $data = $request->validated();
-        $data['biaya_bahan_bakar'] = $data['biaya_bahan_bakar'] ?? 0;
-        $data['biaya_tenaga_kerja'] = $data['biaya_tenaga_kerja'] ?? 0;
-        $data['biaya_tambahan'] = $data['biaya_tambahan'] ?? 0;
+        $data['biaya_bahan_bakar'] = $this->normalizeRupiah($data['biaya_bahan_bakar'] ?? 0);
+        $data['biaya_tenaga_kerja'] = $this->normalizeRupiah($data['biaya_tenaga_kerja'] ?? 0);
+        $data['biaya_tambahan'] = $this->normalizeRupiah($data['biaya_tambahan'] ?? 0);
         $data['total_biaya_distribusi'] = $data['biaya_bahan_bakar'] + $data['biaya_tenaga_kerja'] + $data['biaya_tambahan'];
 
         $distribusi->update($data);
@@ -93,5 +93,12 @@ class DistribusiController extends Controller
 
         return redirect()->route('distribusi.index')
             ->with('success', 'Data distribusi berhasil dihapus.');
+    }
+
+    private function normalizeRupiah(float|int|string|null $value): float
+    {
+        $amount = (float) ($value ?? 0);
+
+        return $amount > 0 && $amount < 1000 ? $amount * 1000 : $amount;
     }
 }

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { type Distribusi, type BreadcrumbItem, type JenisKendaraan, type PredictionResult } from '@/types';
+import { type Distribusi, type BreadcrumbItem, type JenisKendaraan, type PredictionResult, type TrainingResult } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { BarChart3, AlertCircle, Loader2, Zap } from 'lucide-react';
 import { useState } from 'react';
@@ -20,6 +20,7 @@ interface Props {
     distribusis: Distribusi[];
     prediction?: PredictionResult;
     modelTrained?: boolean;
+    training?: TrainingResult;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -33,7 +34,29 @@ const jenisKendaraanOptions: { value: JenisKendaraan; label: string }[] = [
     { value: 'truk_besar', label: 'Truk Besar' },
 ];
 
-export default function ForecastDistribusi({ distribusis, prediction, modelTrained }: Props) {
+function ActualPredictedChart({ samples }: { samples: Array<{ actual: number; predicted: number }> }) {
+    const width = 720;
+    const height = 260;
+    const padding = 28;
+    const values = samples.flatMap((sample) => [sample.actual, sample.predicted]);
+    const min = Math.min(...values, 0);
+    const max = Math.max(...values, 1);
+    const scaleX = (index: number) => padding + (index / Math.max(samples.length - 1, 1)) * (width - padding * 2);
+    const scaleY = (value: number) => height - padding - ((value - min) / Math.max(max - min, 1)) * (height - padding * 2);
+    const toPath = (key: 'actual' | 'predicted') =>
+        samples.map((sample, index) => `${index === 0 ? 'M' : 'L'} ${scaleX(index)} ${scaleY(sample[key])}`).join(' ');
+
+    return (
+        <svg viewBox={`0 0 ${width} ${height}`} className="h-72 w-full">
+            <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} className="stroke-muted-foreground/30" />
+            <line x1={padding} y1={padding} x2={padding} y2={height - padding} className="stroke-muted-foreground/30" />
+            <path d={toPath('actual')} fill="none" className="stroke-blue-600" strokeWidth="3" />
+            <path d={toPath('predicted')} fill="none" className="stroke-green-600" strokeWidth="3" strokeDasharray="6 4" />
+        </svg>
+    );
+}
+
+export default function ForecastDistribusi({ distribusis, prediction, modelTrained, training }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [isTraining, setIsTraining] = useState(false);
 
@@ -58,6 +81,8 @@ export default function ForecastDistribusi({ distribusis, prediction, modelTrain
         });
     };
 
+    const evaluationSamples = training?.evaluation_samples || training?.metrics?.evaluation_samples || [];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Prediksi Biaya Distribusi" />
@@ -76,6 +101,47 @@ export default function ForecastDistribusi({ distribusis, prediction, modelTrain
                         Train Model
                     </Button>
                 </div>
+
+                {training && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Hasil Training Model</CardTitle>
+                            <CardDescription>
+                                Evaluasi model dari data distribusi historis
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-4">
+                                <div className="rounded-lg border p-4">
+                                    <p className="text-sm text-muted-foreground">Jumlah Data</p>
+                                    <p className="text-2xl font-bold">{training.training_count || training.metrics.training_count}</p>
+                                </div>
+                                <div className="rounded-lg border p-4">
+                                    <p className="text-sm text-muted-foreground">MAE</p>
+                                    <p className="text-2xl font-bold">{training.metrics.mae?.toLocaleString('id-ID')}</p>
+                                </div>
+                                <div className="rounded-lg border p-4">
+                                    <p className="text-sm text-muted-foreground">RMSE</p>
+                                    <p className="text-2xl font-bold">{training.metrics.rmse?.toLocaleString('id-ID')}</p>
+                                </div>
+                                <div className="rounded-lg border p-4">
+                                    <p className="text-sm text-muted-foreground">R2 Score</p>
+                                    <p className="text-2xl font-bold">{training.metrics.r2_score != null ? `${(training.metrics.r2_score * 100).toFixed(1)}%` : '-'}</p>
+                                </div>
+                            </div>
+
+                            {evaluationSamples.length > 0 && (
+                                <div className="rounded-md border p-4">
+                                    <div className="mb-2 flex gap-4 text-sm">
+                                        <span className="font-medium text-blue-600">Real</span>
+                                        <span className="font-medium text-green-600">Prediksi</span>
+                                    </div>
+                                    <ActualPredictedChart samples={evaluationSamples} />
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                )}
 
                 <div className="grid gap-4 md:grid-cols-3">
                     <Card className="md:col-span-1">
@@ -205,9 +271,9 @@ export default function ForecastDistribusi({ distribusis, prediction, modelTrain
                                         </div>
                                     )}
 
-                                    {prediction.confidence_score !== undefined && (
+                                    {prediction.confidence_score !== undefined && prediction.confidence_score !== null && (
                                         <div className="text-center text-sm text-muted-foreground">
-                                            Confidence Score: {(prediction.confidence_score * 100).toFixed(1)}%
+                                            Estimasi Kepercayaan Model: {(prediction.confidence_score * 100).toFixed(1)}%
                                         </div>
                                     )}
                                 </div>
@@ -262,4 +328,3 @@ export default function ForecastDistribusi({ distribusis, prediction, modelTrain
         </AppLayout>
     );
 }
-

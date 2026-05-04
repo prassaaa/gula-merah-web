@@ -24,6 +24,7 @@ class BarangRequest extends FormRequest
                 Rule::unique('barangs', 'kode_barang')->ignore($barangId),
             ],
             'nama_barang' => ['required', 'string', 'max:100'],
+            'kategori' => ['nullable', 'string', 'max:50'],
             'deskripsi' => ['nullable', 'string'],
             'harga_per_kg' => ['required', 'numeric', 'min:0'],
             'satuan' => ['required', 'string', 'max:20'],

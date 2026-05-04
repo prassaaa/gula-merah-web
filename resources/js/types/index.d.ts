@@ -113,6 +113,8 @@ export interface Penjualan {
     harga_per_kg_formatted: string;
     total_penjualan: number;
     total_penjualan_formatted: string;
+    metode_pembayaran: 'cash' | 'hutang';
+    metode_pembayaran_label: string;
     hutang: number;
     hutang_formatted: string;
     pembayaran: number;
@@ -259,13 +261,19 @@ export interface ForecastPrediction {
 }
 
 export interface ForecastMetrics {
-    mape?: number;
+    mape?: number | null;
     rmse?: number;
     mae?: number;
+    aic?: number;
+    bic?: number;
 }
 
 export interface ForecastResult {
     predictions?: ForecastPrediction[];
+    historical?: Array<{
+        tanggal: string;
+        stok_akhir: number;
+    }>;
     metrics?: ForecastMetrics;
     error?: string;
 }
@@ -286,6 +294,26 @@ export interface CostBreakdown {
 export interface PredictionResult {
     input_features?: PredictionInput;
     prediction?: CostBreakdown;
-    confidence_score?: number;
+    confidence_score?: number | null;
     error?: string;
+}
+
+export interface TrainingResult {
+    status: string;
+    message: string;
+    metrics: {
+        mae?: number;
+        rmse?: number;
+        r2_score?: number;
+        training_count?: number;
+        evaluation_samples?: Array<{
+            actual: number;
+            predicted: number;
+        }>;
+    };
+    training_count?: number;
+    evaluation_samples?: Array<{
+        actual: number;
+        predicted: number;
+    }>;
 }

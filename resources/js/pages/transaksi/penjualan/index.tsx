@@ -7,6 +7,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/layouts/app-layout';
 import { type Penjualan, type BreadcrumbItem, type PaginatedData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
@@ -57,6 +58,8 @@ export default function PenjualanIndex({ penjualans }: Props) {
                                 <TableHead>Pelanggan</TableHead>
                                 <TableHead>Barang</TableHead>
                                 <TableHead className="text-right">Qty</TableHead>
+                                <TableHead>Pembayaran</TableHead>
+                                <TableHead className="text-right">Sisa Hutang</TableHead>
                                 <TableHead className="text-right">Total</TableHead>
                                 <TableHead className="text-right">Aksi</TableHead>
                             </TableRow>
@@ -64,7 +67,7 @@ export default function PenjualanIndex({ penjualans }: Props) {
                         <TableBody>
                             {penjualans.data.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={7} className="text-center py-8">
+                                    <TableCell colSpan={9} className="text-center py-8">
                                         Belum ada data penjualan
                                     </TableCell>
                                 </TableRow>
@@ -79,6 +82,14 @@ export default function PenjualanIndex({ penjualans }: Props) {
                                         <TableCell>{penjualan.barang?.nama_barang}</TableCell>
                                         <TableCell className="text-right">
                                             {penjualan.jumlah_kg} {penjualan.barang?.satuan}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={penjualan.metode_pembayaran === 'cash' ? 'default' : 'secondary'}>
+                                                {penjualan.metode_pembayaran_label}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            {penjualan.sisa_hutang_formatted}
                                         </TableCell>
                                         <TableCell className="text-right font-medium">
                                             {penjualan.total_penjualan_formatted}
@@ -131,4 +142,3 @@ export default function PenjualanIndex({ penjualans }: Props) {
         </AppLayout>
     );
 }
-

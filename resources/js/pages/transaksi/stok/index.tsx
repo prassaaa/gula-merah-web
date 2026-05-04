@@ -7,13 +7,19 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { type Stok, type BreadcrumbItem, type PaginatedData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
+import { Edit, Eye, Plus, Search, Trash2 } from 'lucide-react';
 
 interface Props {
     stoks: PaginatedData<Stok>;
+    latestStocks: Stok[];
+    filters: {
+        search?: string;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -21,11 +27,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Stok', href: '/stok' },
 ];
 
-export default function StokIndex({ stoks }: Props) {
+export default function StokIndex({ stoks, latestStocks, filters }: Props) {
     const handleDelete = (id: number) => {
         if (confirm('Apakah Anda yakin ingin menghapus data stok ini?')) {
             router.delete(`/stok/${id}`);
         }
+    };
+
+    const handleSearch = (value: string) => {
+        router.get('/stok', { search: value }, { preserveState: true, replace: true });
     };
 
     return (
@@ -47,6 +57,42 @@ export default function StokIndex({ stoks }: Props) {
                         </Link>
                     </Button>
                 </div>
+
+                <div className="relative max-w-md">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                        defaultValue={filters.search || ''}
+                        className="pl-9"
+                        placeholder="Cari nama gula atau kode barang..."
+                        onChange={(event) => handleSearch(event.target.value)}
+                    />
+                </div>
+
+                {latestStocks.length > 0 && (
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                        {latestStocks.map((stok) => (
+                            <Card key={stok.id}>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm">{stok.barang?.nama_barang}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-muted-foreground">Tanggal</span>
+                                        <span className="font-medium">{stok.tanggal}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-muted-foreground">Stok Awal</span>
+                                        <span>{stok.stok_awal}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-muted-foreground">Stok Akhir</span>
+                                        <span className="font-semibold">{stok.stok_akhir}</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                )}
 
                 <div className="rounded-md border">
                     <Table>
@@ -131,4 +177,3 @@ export default function StokIndex({ stoks }: Props) {
         </AppLayout>
     );
 }
-

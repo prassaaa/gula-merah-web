@@ -8,20 +8,41 @@ use App\Http\Resources\StokResource;
 use App\Models\Barang;
 use App\Models\Stok;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class StokController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $stoks = Stok::query()
+        $query = Stok::query()
             ->with('barang')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->search;
+
+                $query->whereHas('barang', function ($barangQuery) use ($search) {
+                    $barangQuery->where('nama_barang', 'like', "%{$search}%")
+                        ->orWhere('kode_barang', 'like', "%{$search}%");
+                });
+            });
+
+        $stoks = (clone $query)
             ->orderByDesc('tanggal')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
+
+        $latestStocks = (clone $query)
+            ->orderByDesc('tanggal')
+            ->get()
+            ->unique('barang_id')
+            ->values()
+            ->map(fn ($stok) => (new StokResource($stok))->resolve());
 
         return Inertia::render('transaksi/stok/index', [
             'stoks' => StokResource::collection($stoks),
+            'latestStocks' => $latestStocks,
+            'filters' => $request->only('search'),
         ]);
     }
 

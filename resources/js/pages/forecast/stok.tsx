@@ -9,6 +9,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import InputError from '@/components/input-error';
 import AppLayout from '@/layouts/app-layout';
 import { type Barang, type Stok, type BreadcrumbItem, type ForecastResult } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
@@ -20,6 +21,13 @@ interface Props {
     barangs: Barang[];
     stoks: Stok[];
     forecast?: ForecastResult;
+    filters?: {
+        barang_id?: string;
+        start_date?: string;
+        end_date?: string;
+        forecast_until?: string;
+        periods?: string;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,11 +35,48 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Prediksi Stok (ARIMA)', href: '/forecast/stok' },
 ];
 
-export default function ForecastStok({ barangs, stoks, forecast }: Props) {
+function MiniLineChart({
+    actual,
+    predicted,
+}: {
+    actual: Array<{ label: string; value: number }>;
+    predicted: Array<{ label: string; value: number }>;
+}) {
+    const points = [...actual, ...predicted];
+    const width = 720;
+    const height = 260;
+    const padding = 28;
+    const min = Math.min(...points.map((point) => point.value), 0);
+    const max = Math.max(...points.map((point) => point.value), 1);
+    const scaleX = (index: number) => padding + (index / Math.max(points.length - 1, 1)) * (width - padding * 2);
+    const scaleY = (value: number) => height - padding - ((value - min) / Math.max(max - min, 1)) * (height - padding * 2);
+    const toPath = (series: Array<{ value: number }>, offset = 0) =>
+        series.map((point, index) => `${index === 0 ? 'M' : 'L'} ${scaleX(index + offset)} ${scaleY(point.value)}`).join(' ');
+
+    return (
+        <svg viewBox={`0 0 ${width} ${height}`} className="h-72 w-full">
+            <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} className="stroke-muted-foreground/30" />
+            <line x1={padding} y1={padding} x2={padding} y2={height - padding} className="stroke-muted-foreground/30" />
+            <path d={toPath(actual)} fill="none" className="stroke-blue-600" strokeWidth="3" />
+            <path d={toPath(predicted, actual.length)} fill="none" className="stroke-green-600" strokeWidth="3" strokeDasharray="6 4" />
+            {actual.map((point, index) => (
+                <circle key={`actual-${point.label}`} cx={scaleX(index)} cy={scaleY(point.value)} r="3" className="fill-blue-600" />
+            ))}
+            {predicted.map((point, index) => (
+                <circle key={`pred-${point.label}`} cx={scaleX(index + actual.length)} cy={scaleY(point.value)} r="3" className="fill-green-600" />
+            ))}
+        </svg>
+    );
+}
+
+export default function ForecastStok({ barangs, stoks, forecast, filters }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const { data, setData, post, processing, errors } = useForm({
-        barang_id: '',
-        periods: '7',
+        barang_id: filters?.barang_id || '',
+        start_date: filters?.start_date || '',
+        end_date: filters?.end_date || '',
+        forecast_until: filters?.forecast_until || '',
+        periods: filters?.periods || '7',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -41,6 +86,15 @@ export default function ForecastStok({ barangs, stoks, forecast }: Props) {
             onFinish: () => setIsLoading(false),
         });
     };
+
+    const actualChart = forecast?.historical?.map((item) => ({
+        label: item.tanggal,
+        value: Number(item.stok_akhir),
+    })) || [];
+    const predictedChart = forecast?.predictions?.map((item) => ({
+        label: item.date,
+        value: Number(item.value),
+    })) || [];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -83,16 +137,48 @@ export default function ForecastStok({ barangs, stoks, forecast }: Props) {
                                     </Select>
                                 </div>
 
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="start_date">Tanggal Awal Data</Label>
+                                        <Input
+                                            id="start_date"
+                                            type="date"
+                                            value={data.start_date}
+                                            onChange={(e) => setData('start_date', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="end_date">Tanggal Akhir Data</Label>
+                                        <Input
+                                            id="end_date"
+                                            type="date"
+                                            value={data.end_date}
+                                            onChange={(e) => setData('end_date', e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="forecast_until">Prediksi Sampai Tanggal</Label>
+                                    <Input
+                                        id="forecast_until"
+                                        type="date"
+                                        value={data.forecast_until}
+                                        onChange={(e) => setData('forecast_until', e.target.value)}
+                                    />
+                                </div>
+
                                 <div className="space-y-2">
                                     <Label htmlFor="periods">Periode Prediksi (hari)</Label>
                                     <Input
                                         id="periods"
                                         type="number"
                                         min="1"
-                                        max="30"
+                                        max="365"
                                         value={data.periods}
                                         onChange={(e) => setData('periods', e.target.value)}
                                     />
+                                    <InputError message={errors.periods} />
                                 </div>
 
                                 <Button type="submit" className="w-full" disabled={processing || isLoading}>
@@ -156,11 +242,11 @@ export default function ForecastStok({ barangs, stoks, forecast }: Props) {
                                     </div>
 
                                     {forecast.metrics && (
-                                        <div className="grid gap-4 md:grid-cols-3">
+                                        <div className="grid gap-4 md:grid-cols-5">
                                             <div className="rounded-lg border p-4">
                                                 <p className="text-sm text-muted-foreground">MAPE</p>
                                                 <p className="text-2xl font-bold">
-                                                    {forecast.metrics.mape?.toFixed(2)}%
+                                                    {forecast.metrics.mape != null ? `${forecast.metrics.mape.toFixed(2)}%` : '-'}
                                                 </p>
                                             </div>
                                             <div className="rounded-lg border p-4">
@@ -175,6 +261,24 @@ export default function ForecastStok({ barangs, stoks, forecast }: Props) {
                                                     {forecast.metrics.mae?.toFixed(2)}
                                                 </p>
                                             </div>
+                                            <div className="rounded-lg border p-4">
+                                                <p className="text-sm text-muted-foreground">AIC</p>
+                                                <p className="text-2xl font-bold">{forecast.metrics.aic?.toFixed(2)}</p>
+                                            </div>
+                                            <div className="rounded-lg border p-4">
+                                                <p className="text-sm text-muted-foreground">BIC</p>
+                                                <p className="text-2xl font-bold">{forecast.metrics.bic?.toFixed(2)}</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {actualChart.length > 0 && predictedChart.length > 0 && (
+                                        <div className="rounded-md border p-4">
+                                            <div className="mb-2 flex gap-4 text-sm">
+                                                <span className="font-medium text-blue-600">Aktual</span>
+                                                <span className="font-medium text-green-600">Prediksi</span>
+                                            </div>
+                                            <MiniLineChart actual={actualChart.slice(-30)} predicted={predictedChart} />
                                         </div>
                                     )}
                                 </div>
@@ -225,4 +329,3 @@ export default function ForecastStok({ barangs, stoks, forecast }: Props) {
         </AppLayout>
     );
 }
-

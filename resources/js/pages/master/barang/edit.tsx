@@ -25,6 +25,7 @@ export default function BarangEdit({ barang }: Props) {
     const { data, setData, put, processing, errors } = useForm({
         kode_barang: barang.kode_barang,
         nama_barang: barang.nama_barang,
+        kategori: barang.kategori || '',
         deskripsi: barang.deskripsi || '',
         harga_per_kg: barang.harga_per_kg.toString(),
         satuan: barang.satuan,
@@ -80,6 +81,16 @@ export default function BarangEdit({ barang }: Props) {
                                     />
                                     <InputError message={errors.nama_barang} />
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="kategori">Kategori</Label>
+                                <Input
+                                    id="kategori"
+                                    value={data.kategori}
+                                    onChange={(e) => setData('kategori', e.target.value)}
+                                />
+                                <InputError message={errors.kategori} />
                             </div>
 
                             <div className="space-y-2">
@@ -140,4 +151,3 @@ export default function BarangEdit({ barang }: Props) {
         </AppLayout>
     );
 }
-

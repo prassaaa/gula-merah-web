@@ -20,6 +20,7 @@ export default function BarangCreate() {
     const { data, setData, post, processing, errors } = useForm({
         kode_barang: '',
         nama_barang: '',
+        kategori: '',
         deskripsi: '',
         harga_per_kg: '',
         satuan: 'kg',
@@ -77,6 +78,17 @@ export default function BarangCreate() {
                                     />
                                     <InputError message={errors.nama_barang} />
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="kategori">Kategori</Label>
+                                <Input
+                                    id="kategori"
+                                    value={data.kategori}
+                                    onChange={(e) => setData('kategori', e.target.value)}
+                                    placeholder="Contoh: Gula Merah"
+                                />
+                                <InputError message={errors.kategori} />
                             </div>
 
                             <div className="space-y-2">
@@ -140,4 +152,3 @@ export default function BarangCreate() {
         </AppLayout>
     );
 }
-

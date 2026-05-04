@@ -18,7 +18,7 @@ class PenjualanRequest extends FormRequest
 
         return [
             'no_faktur' => [
-                'required',
+                'nullable',
                 'string',
                 'max:50',
                 Rule::unique('penjualans', 'no_faktur')->ignore($penjualanId),
@@ -28,6 +28,7 @@ class PenjualanRequest extends FormRequest
             'tanggal' => ['required', 'date'],
             'jumlah_kg' => ['required', 'numeric', 'min:0'],
             'harga_per_kg' => ['required', 'numeric', 'min:0'],
+            'metode_pembayaran' => ['required', Rule::in(['cash', 'hutang'])],
             'hutang' => ['nullable', 'numeric', 'min:0'],
             'pembayaran' => ['nullable', 'numeric', 'min:0'],
             'keterangan' => ['nullable', 'string'],
@@ -37,13 +38,13 @@ class PenjualanRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'no_faktur.required' => 'Nomor faktur wajib diisi.',
             'no_faktur.unique' => 'Nomor faktur sudah digunakan.',
             'pelanggan_id.required' => 'Pelanggan wajib dipilih.',
             'barang_id.required' => 'Barang wajib dipilih.',
             'tanggal.required' => 'Tanggal wajib diisi.',
             'jumlah_kg.required' => 'Jumlah (kg) wajib diisi.',
             'harga_per_kg.required' => 'Harga per kg wajib diisi.',
+            'metode_pembayaran.required' => 'Metode pembayaran wajib dipilih.',
         ];
     }
 }

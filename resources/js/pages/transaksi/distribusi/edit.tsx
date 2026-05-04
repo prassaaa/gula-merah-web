@@ -28,6 +28,11 @@ const jenisKendaraanOptions: { value: JenisKendaraan; label: string }[] = [
     { value: 'truk_besar', label: 'Truk Besar' },
 ];
 
+const normalizeRupiah = (value: string | number) => {
+    const amount = Number(value || 0);
+    return amount > 0 && amount < 1000 ? amount * 1000 : amount;
+};
+
 export default function DistribusiEdit({ distribusi, pelanggans, barangs }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
@@ -50,7 +55,10 @@ export default function DistribusiEdit({ distribusi, pelanggans, barangs }: Prop
         keterangan: distribusi.keterangan || '',
     });
 
-    const totalBiaya = Number(data.biaya_bahan_bakar) + Number(data.biaya_tenaga_kerja) + Number(data.biaya_tambahan);
+    const totalBiaya =
+        normalizeRupiah(data.biaya_bahan_bakar) +
+        normalizeRupiah(data.biaya_tenaga_kerja) +
+        normalizeRupiah(data.biaya_tambahan);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -252,4 +260,3 @@ export default function DistribusiEdit({ distribusi, pelanggans, barangs }: Prop
         </AppLayout>
     );
 }
-

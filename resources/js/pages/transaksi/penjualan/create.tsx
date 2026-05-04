@@ -34,9 +34,21 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
         barang_id: '',
         jumlah_kg: '',
         harga_per_kg: '',
+        metode_pembayaran: 'cash' as 'cash' | 'hutang',
+        pembayaran: '',
     });
 
     const selectedBarang = barangs.find((b) => b.id.toString() === data.barang_id);
+    const totalPenjualan = Number(data.jumlah_kg) * Number(data.harga_per_kg);
+    const pembayaran = data.metode_pembayaran === 'cash' ? totalPenjualan : Number(data.pembayaran || 0);
+    const sisaHutang = data.metode_pembayaran === 'hutang' ? Math.max(0, totalPenjualan - pembayaran) : 0;
+
+    const generateFaktur = (barangId: string, tanggal: string) => {
+        const barang = barangs.find((b) => b.id.toString() === barangId);
+        if (!barang || !tanggal) return '';
+
+        return `INV-PJ-${barang.kode_barang}-${tanggal.replaceAll('-', '')}-001`;
+    };
 
     const handleBarangChange = (value: string) => {
         setData('barang_id', value);
@@ -44,14 +56,18 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
         if (barang) {
             setData('harga_per_kg', barang.harga_per_kg.toString());
         }
+        setData('no_faktur', generateFaktur(value, data.tanggal));
+    };
+
+    const handleTanggalChange = (value: string) => {
+        setData('tanggal', value);
+        setData('no_faktur', generateFaktur(data.barang_id, value));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/penjualan');
     };
-
-    const totalPenjualan = Number(data.jumlah_kg) * Number(data.harga_per_kg);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -85,7 +101,9 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
                                         id="no_faktur"
                                         value={data.no_faktur}
                                         onChange={(e) => setData('no_faktur', e.target.value)}
-                                        placeholder="Contoh: INV-001"
+                                        placeholder="Otomatis setelah barang dan tanggal dipilih"
+                                        readOnly
+                                        className="bg-muted"
                                     />
                                     <InputError message={errors.no_faktur} />
                                 </div>
@@ -95,7 +113,7 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
                                         id="tanggal"
                                         type="date"
                                         value={data.tanggal}
-                                        onChange={(e) => setData('tanggal', e.target.value)}
+                                        onChange={(e) => handleTanggalChange(e.target.value)}
                                     />
                                     <InputError message={errors.tanggal} />
                                 </div>
@@ -171,6 +189,44 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
                                 </div>
                             </div>
 
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <div className="space-y-2">
+                                    <Label htmlFor="metode_pembayaran">Metode Pembayaran</Label>
+                                    <Select
+                                        value={data.metode_pembayaran}
+                                        onValueChange={(value: 'cash' | 'hutang') => {
+                                            setData('metode_pembayaran', value);
+                                            setData('pembayaran', value === 'cash' ? totalPenjualan.toString() : '');
+                                        }}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih metode" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="cash">Cash</SelectItem>
+                                            <SelectItem value="hutang">Hutang</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.metode_pembayaran} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="pembayaran">Pembayaran / DP</Label>
+                                    <Input
+                                        id="pembayaran"
+                                        type="number"
+                                        value={data.metode_pembayaran === 'cash' ? totalPenjualan : data.pembayaran}
+                                        disabled={data.metode_pembayaran === 'cash'}
+                                        onChange={(e) => setData('pembayaran', e.target.value)}
+                                        placeholder="0"
+                                    />
+                                    <InputError message={errors.pembayaran} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Sisa Hutang</Label>
+                                    <Input value={`Rp ${sisaHutang.toLocaleString('id-ID')}`} disabled className="bg-muted" />
+                                </div>
+                            </div>
+
                             <div className="flex justify-end gap-2">
                                 <Button variant="outline" asChild>
                                     <Link href="/penjualan">Batal</Link>
@@ -187,4 +243,3 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
         </AppLayout>
     );
 }
-

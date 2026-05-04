@@ -2,6 +2,8 @@
 Pydantic schemas for Distribution Cost Prediction (XGBoost)
 """
 
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -34,7 +36,7 @@ class PredictionResponse(BaseModel):
     """Response schema for single prediction"""
     input_features: DistribusiFeatures
     prediction: CostBreakdown
-    confidence_score: float = Field(ge=0, le=1, description="Model confidence")
+    confidence_score: Optional[float] = Field(default=None, ge=0, le=1, description="Model confidence based on latest training R2")
 
 
 class BatchPredictionResponse(BaseModel):
@@ -64,4 +66,5 @@ class TrainResponse(BaseModel):
     status: str
     message: str
     metrics: dict = Field(default_factory=dict, description="Training metrics (MAE, RMSE, R2)")
-
+    training_count: int = 0
+    evaluation_samples: list[dict] = Field(default_factory=list, description="Actual vs predicted samples from test split")

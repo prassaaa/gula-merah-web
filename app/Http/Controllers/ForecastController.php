@@ -8,6 +8,7 @@ use App\Models\Barang;
 use App\Models\Distribusi;
 use App\Models\Stok;
 use App\Services\PythonApiService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -36,7 +37,10 @@ class ForecastController extends Controller
     {
         $request->validate([
             'barang_id' => ['required', 'exists:barangs,id'],
-            'periods' => ['required', 'integer', 'min:1', 'max:30'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'forecast_until' => ['nullable', 'date'],
+            'periods' => ['nullable', 'integer', 'min:1', 'max:365'],
         ]);
 
         $barangs = Barang::where('is_active', true)->orderBy('nama_barang')->get();
@@ -47,11 +51,13 @@ class ForecastController extends Controller
 
         // Get historical stock data for ARIMA
         $stokData = Stok::where('barang_id', $request->barang_id)
+            ->when($request->filled('start_date'), fn ($query) => $query->whereDate('tanggal', '>=', $request->start_date))
+            ->when($request->filled('end_date'), fn ($query) => $query->whereDate('tanggal', '<=', $request->end_date))
             ->orderBy('tanggal')
             ->get()
             ->map(fn ($s) => [
-                'tanggal' => $s->tanggal,
-                'stok_akhir' => $s->stok_akhir,
+                'tanggal' => $s->tanggal?->format('Y-m-d'),
+                'stok_akhir' => (float) $s->stok_akhir,
             ]);
 
         if ($stokData->count() < 10) {
@@ -65,12 +71,30 @@ class ForecastController extends Controller
         }
 
         try {
-            $result = $this->pythonApi->forecastStock($stokData->toArray(), (int) $request->periods);
+            $lastDate = $stokData->last()['tanggal'];
+            if ($request->filled('forecast_until') && Carbon::parse($request->forecast_until)->lte(Carbon::parse($lastDate))) {
+                return Inertia::render('forecast/stok', [
+                    'barangs' => BarangResource::collection($barangs)->resolve(),
+                    'stoks' => $stoks,
+                    'forecast' => [
+                        'error' => 'Tanggal akhir prediksi harus setelah tanggal terakhir data histori.',
+                    ],
+                    'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'forecast_until', 'periods']),
+                ]);
+            }
+
+            $periods = $request->filled('forecast_until')
+                ? (int) Carbon::parse($lastDate)->diffInDays(Carbon::parse($request->forecast_until))
+                : (int) ($request->periods ?? 7);
+
+            $result = $this->pythonApi->forecastStock($stokData->toArray(), $periods);
+            $result['historical'] = $stokData->values()->toArray();
 
             return Inertia::render('forecast/stok', [
                 'barangs' => BarangResource::collection($barangs)->resolve(),
                 'stoks' => $stoks,
                 'forecast' => $result,
+                'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'forecast_until', 'periods']),
             ]);
         } catch (\Exception $e) {
             return Inertia::render('forecast/stok', [
@@ -161,6 +185,7 @@ class ForecastController extends Controller
 
             return Inertia::render('forecast/distribusi', [
                 'distribusis' => DistribusiResource::collection($distribusis)->resolve(),
+                'training' => $result,
                 'modelTrained' => true,
             ])->with('success', 'Model berhasil di-training!');
         } catch (\Exception $e) {

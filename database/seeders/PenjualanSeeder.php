@@ -57,6 +57,7 @@ class PenjualanSeeder extends Seeder
                     'jumlah_kg' => $this->parseNumber($data[6]),
                     'harga_per_kg' => $this->parseRupiah($data[7]),
                     'total_penjualan' => $this->parseRupiah($data[11]),
+                    'metode_pembayaran' => $this->parseRupiah($data[10]) > 0 ? 'hutang' : 'cash',
                     'hutang' => $this->parseRupiah($data[8]),
                     'pembayaran' => $this->parseRupiah($data[9]),
                     'sisa_hutang' => $this->parseRupiah($data[10]),

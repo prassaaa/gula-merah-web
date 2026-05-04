@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type Penjualan, type BreadcrumbItem } from '@/types';
@@ -71,6 +72,16 @@ export default function PenjualanShow({ penjualan }: Props) {
                                     </dt>
                                     <dd className="text-lg font-medium">{penjualan.no_faktur}</dd>
                                 </div>
+                                <div>
+                                    <dt className="text-sm font-medium text-muted-foreground">
+                                        Metode Pembayaran
+                                    </dt>
+                                    <dd>
+                                        <Badge variant={penjualan.metode_pembayaran === 'cash' ? 'default' : 'secondary'}>
+                                            {penjualan.metode_pembayaran_label}
+                                        </Badge>
+                                    </dd>
+                                </div>
                                 <div className="flex items-center gap-2">
                                     <Calendar className="h-4 w-4 text-muted-foreground" />
                                     <div>
@@ -140,8 +151,29 @@ export default function PenjualanShow({ penjualan }: Props) {
                         </div>
                     </CardContent>
                 </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Pembayaran</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid gap-4 md:grid-cols-3">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total Penjualan</p>
+                                <p className="text-lg font-semibold">{penjualan.total_penjualan_formatted}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-muted-foreground">Dibayar</p>
+                                <p className="text-lg font-semibold">{penjualan.pembayaran_formatted}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-muted-foreground">Sisa Hutang</p>
+                                <p className="text-lg font-semibold">{penjualan.sisa_hutang_formatted}</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </AppLayout>
     );
 }
-

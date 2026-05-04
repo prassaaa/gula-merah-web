@@ -21,6 +21,7 @@ class Penjualan extends Model
         'jumlah_kg',
         'harga_per_kg',
         'total_penjualan',
+        'metode_pembayaran',
         'hutang',
         'pembayaran',
         'sisa_hutang',

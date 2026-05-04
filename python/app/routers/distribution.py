@@ -101,6 +101,8 @@ async def train_model(request: TrainRequest):
             status="success",
             message="Model trained successfully",
             metrics=metrics,
+            training_count=metrics.get("training_count", len(request.data)),
+            evaluation_samples=metrics.get("evaluation_samples", []),
         )
 
     except Exception as e:
@@ -116,4 +118,3 @@ async def distribution_info():
         "features": ["jarak_kirim_km", "jumlah_kg", "jenis_kendaraan"],
         "vehicle_types": ["pick_up", "truk_sedang", "truk_besar"],
     }
-

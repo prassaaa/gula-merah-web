@@ -36,16 +36,19 @@ export default function PenjualanEdit({ penjualan, barangs, pelanggans }: Props)
         barang_id: penjualan.barang_id.toString(),
         jumlah_kg: penjualan.jumlah_kg.toString(),
         harga_per_kg: penjualan.harga_per_kg.toString(),
+        metode_pembayaran: penjualan.metode_pembayaran,
+        pembayaran: penjualan.pembayaran.toString(),
     });
 
     const selectedBarang = barangs.find((b) => b.id.toString() === data.barang_id);
+    const totalPenjualan = Number(data.jumlah_kg) * Number(data.harga_per_kg);
+    const pembayaran = data.metode_pembayaran === 'cash' ? totalPenjualan : Number(data.pembayaran || 0);
+    const sisaHutang = data.metode_pembayaran === 'hutang' ? Math.max(0, totalPenjualan - pembayaran) : 0;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(`/penjualan/${penjualan.id}`);
     };
-
-    const totalPenjualan = Number(data.jumlah_kg) * Number(data.harga_per_kg);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -166,6 +169,43 @@ export default function PenjualanEdit({ penjualan, barangs, pelanggans }: Props)
                                 </div>
                             </div>
 
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <div className="space-y-2">
+                                    <Label htmlFor="metode_pembayaran">Metode Pembayaran</Label>
+                                    <Select
+                                        value={data.metode_pembayaran}
+                                        onValueChange={(value: 'cash' | 'hutang') => {
+                                            setData('metode_pembayaran', value);
+                                            setData('pembayaran', value === 'cash' ? totalPenjualan.toString() : data.pembayaran);
+                                        }}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih metode" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="cash">Cash</SelectItem>
+                                            <SelectItem value="hutang">Hutang</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.metode_pembayaran} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="pembayaran">Pembayaran / DP</Label>
+                                    <Input
+                                        id="pembayaran"
+                                        type="number"
+                                        value={data.metode_pembayaran === 'cash' ? totalPenjualan : data.pembayaran}
+                                        disabled={data.metode_pembayaran === 'cash'}
+                                        onChange={(e) => setData('pembayaran', e.target.value)}
+                                    />
+                                    <InputError message={errors.pembayaran} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Sisa Hutang</Label>
+                                    <Input value={`Rp ${sisaHutang.toLocaleString('id-ID')}`} disabled className="bg-muted" />
+                                </div>
+                            </div>
+
                             <div className="flex justify-end gap-2">
                                 <Button variant="outline" asChild>
                                     <Link href="/penjualan">Batal</Link>
@@ -182,4 +222,3 @@ export default function PenjualanEdit({ penjualan, barangs, pelanggans }: Props)
         </AppLayout>
     );
 }
-
