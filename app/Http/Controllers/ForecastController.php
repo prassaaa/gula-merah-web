@@ -8,7 +8,6 @@ use App\Models\Barang;
 use App\Models\Distribusi;
 use App\Models\Stok;
 use App\Services\PythonApiService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -50,7 +49,7 @@ class ForecastController extends Controller
         $stokData = Stok::where('barang_id', $request->barang_id)
             ->orderBy('tanggal')
             ->get()
-            ->map(fn($s) => [
+            ->map(fn ($s) => [
                 'tanggal' => $s->tanggal,
                 'stok_akhir' => $s->stok_akhir,
             ]);
@@ -78,7 +77,7 @@ class ForecastController extends Controller
                 'barangs' => BarangResource::collection($barangs)->resolve(),
                 'stoks' => $stoks,
                 'forecast' => [
-                    'error' => 'Gagal melakukan forecasting: ' . $e->getMessage(),
+                    'error' => 'Gagal melakukan forecasting: '.$e->getMessage(),
                 ],
             ]);
         }
@@ -124,7 +123,7 @@ class ForecastController extends Controller
             return Inertia::render('forecast/distribusi', [
                 'distribusis' => DistribusiResource::collection($distribusis)->resolve(),
                 'prediction' => [
-                    'error' => 'Gagal melakukan prediksi: ' . $e->getMessage(),
+                    'error' => 'Gagal melakukan prediksi: '.$e->getMessage(),
                 ],
             ]);
         }
@@ -138,7 +137,7 @@ class ForecastController extends Controller
             ->get();
 
         // Get all distribution data for training
-        $distribusiData = Distribusi::all()->map(fn($d) => [
+        $distribusiData = Distribusi::all()->map(fn ($d) => [
             'jarak_kirim_km' => (int) $d->jarak_kirim_km,
             'jumlah_kg' => (float) $d->jumlah_kg,
             'jenis_kendaraan' => $d->jenis_kendaraan,
@@ -148,11 +147,11 @@ class ForecastController extends Controller
             'total_biaya_distribusi' => (float) $d->total_biaya_distribusi,
         ]);
 
-        if ($distribusiData->count() < 10) {
+        if ($distribusiData->count() < 50) {
             return Inertia::render('forecast/distribusi', [
                 'distribusis' => DistribusiResource::collection($distribusis)->resolve(),
                 'prediction' => [
-                    'error' => 'Data distribusi tidak cukup untuk training (minimal 10 data).',
+                    'error' => 'Data distribusi tidak cukup untuk training (minimal 50 data).',
                 ],
             ]);
         }
@@ -168,7 +167,7 @@ class ForecastController extends Controller
             return Inertia::render('forecast/distribusi', [
                 'distribusis' => DistribusiResource::collection($distribusis)->resolve(),
                 'prediction' => [
-                    'error' => 'Gagal melakukan training: ' . $e->getMessage(),
+                    'error' => 'Gagal melakukan training: '.$e->getMessage(),
                 ],
             ]);
         }

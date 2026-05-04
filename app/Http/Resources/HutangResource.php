@@ -21,10 +21,16 @@ class HutangResource extends JsonResource
             'penjualan' => $this->whenLoaded('penjualan', function () {
                 return [
                     'id' => $this->penjualan->id,
-                    'tanggal_penjualan' => $this->penjualan->tanggal_penjualan,
-                    'pelanggan' => $this->penjualan->pelanggan?->nama_pelanggan,
-                    'barang' => $this->penjualan->barang?->nama_barang,
-                    'total_harga' => $this->penjualan->total_harga,
+                    'tanggal_penjualan' => $this->penjualan->tanggal?->format('Y-m-d'),
+                    'pelanggan_id' => $this->penjualan->pelanggan_id,
+                    'barang_id' => $this->penjualan->barang_id,
+                    'pelanggan' => $this->penjualan->pelanggan
+                        ? (new PelangganResource($this->penjualan->pelanggan))->resolve()
+                        : null,
+                    'barang' => $this->penjualan->barang
+                        ? (new BarangResource($this->penjualan->barang))->resolve()
+                        : null,
+                    'total_harga' => $this->penjualan->total_penjualan,
                 ];
             }),
             'tanggal' => $this->tanggal?->format('Y-m-d'),

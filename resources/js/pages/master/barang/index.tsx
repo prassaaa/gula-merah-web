@@ -12,7 +12,6 @@ import AppLayout from '@/layouts/app-layout';
 import { type Barang, type BreadcrumbItem, type PaginatedData } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Edit, Eye, Plus, Trash2 } from 'lucide-react';
-import { Pagination } from '@/components/ui/pagination';
 
 interface Props {
     barangs: PaginatedData<Barang>;
@@ -131,4 +130,3 @@ export default function BarangIndex({ barangs }: Props) {
         </AppLayout>
     );
 }
-

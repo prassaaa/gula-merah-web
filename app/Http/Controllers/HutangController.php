@@ -24,7 +24,7 @@ class HutangController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('faktur_penjualan', 'like', "%{$search}%")
                     ->orWhereHas('penjualan.pelanggan', function ($q2) use ($search) {
-                        $q2->where('nama_pelanggan', 'like', "%{$search}%");
+                        $q2->where('nama', 'like', "%{$search}%");
                     });
             });
         }
@@ -68,20 +68,20 @@ class HutangController extends Controller
         $penjualans = Penjualan::with(['pelanggan', 'barang'])
             ->whereDoesntHave('hutangs')
             ->where('sisa_hutang', '>', 0)
-            ->orderBy('tanggal_penjualan', 'desc')
+            ->orderBy('tanggal', 'desc')
             ->get()
             ->map(function ($penjualan) {
                 return [
                     'id' => $penjualan->id,
                     'label' => sprintf(
                         '%s - %s - %s (Rp %s)',
-                        $penjualan->tanggal_penjualan->format('d/m/Y'),
-                        $penjualan->pelanggan?->nama_pelanggan ?? 'N/A',
+                        $penjualan->tanggal?->format('d/m/Y') ?? '-',
+                        $penjualan->pelanggan?->nama ?? 'N/A',
                         $penjualan->barang?->nama_barang ?? 'N/A',
-                        number_format($penjualan->total_harga, 0, ',', '.')
+                        number_format($penjualan->total_penjualan, 0, ',', '.')
                     ),
-                    'nilai_faktur' => $penjualan->total_harga,
-                    'dp_bayar' => $penjualan->dp_bayar,
+                    'nilai_faktur' => $penjualan->total_penjualan,
+                    'dp_bayar' => $penjualan->pembayaran,
                     'sisa_hutang' => $penjualan->sisa_hutang,
                 ];
             });
@@ -100,7 +100,7 @@ class HutangController extends Controller
 
         // Generate faktur if not provided
         if (empty($data['faktur_penjualan'])) {
-            $data['faktur_penjualan'] = 'HTG-' . date('Ymd') . '-' . str_pad(Hutang::count() + 1, 4, '0', STR_PAD_LEFT);
+            $data['faktur_penjualan'] = 'HTG-'.date('Ymd').'-'.str_pad(Hutang::count() + 1, 4, '0', STR_PAD_LEFT);
         }
 
         Hutang::create($data);
@@ -133,20 +133,20 @@ class HutangController extends Controller
                 $query->whereDoesntHave('hutangs')
                     ->orWhere('id', $hutang->penjualan_id);
             })
-            ->orderBy('tanggal_penjualan', 'desc')
+            ->orderBy('tanggal', 'desc')
             ->get()
             ->map(function ($penjualan) {
                 return [
                     'id' => $penjualan->id,
                     'label' => sprintf(
                         '%s - %s - %s (Rp %s)',
-                        $penjualan->tanggal_penjualan->format('d/m/Y'),
-                        $penjualan->pelanggan?->nama_pelanggan ?? 'N/A',
+                        $penjualan->tanggal?->format('d/m/Y') ?? '-',
+                        $penjualan->pelanggan?->nama ?? 'N/A',
                         $penjualan->barang?->nama_barang ?? 'N/A',
-                        number_format($penjualan->total_harga, 0, ',', '.')
+                        number_format($penjualan->total_penjualan, 0, ',', '.')
                     ),
-                    'nilai_faktur' => $penjualan->total_harga,
-                    'dp_bayar' => $penjualan->dp_bayar,
+                    'nilai_faktur' => $penjualan->total_penjualan,
+                    'dp_bayar' => $penjualan->pembayaran,
                     'sisa_hutang' => $penjualan->sisa_hutang,
                 ];
             });
@@ -185,7 +185,7 @@ class HutangController extends Controller
     public function bayar(Request $request, Hutang $hutang)
     {
         $request->validate([
-            'jumlah_bayar' => ['required', 'numeric', 'min:1', 'max:' . $hutang->sisa_hutang],
+            'jumlah_bayar' => ['required', 'numeric', 'min:1', 'max:'.$hutang->sisa_hutang],
         ], [
             'jumlah_bayar.required' => 'Jumlah bayar harus diisi.',
             'jumlah_bayar.min' => 'Jumlah bayar minimal Rp 1.',
@@ -206,13 +206,13 @@ class HutangController extends Controller
         // Update related penjualan if exists
         if ($hutang->penjualan) {
             $hutang->penjualan->update([
-                'dp_bayar' => $newDpBayar,
+                'pembayaran' => $newDpBayar,
                 'sisa_hutang' => max(0, $newSisaHutang),
                 'status' => $newStatus,
             ]);
         }
 
         return redirect()->back()
-            ->with('success', 'Pembayaran berhasil dicatat. ' . ($newStatus === 'lunas' ? 'Hutang LUNAS!' : ''));
+            ->with('success', 'Pembayaran berhasil dicatat. '.($newStatus === 'lunas' ? 'Hutang LUNAS!' : ''));
     }
 }

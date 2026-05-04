@@ -12,6 +12,7 @@ class DistribusiResource extends JsonResource
         return [
             'id' => $this->id,
             'faktur_distribusi' => $this->faktur_distribusi,
+            'faktur_penjualan' => $this->faktur_penjualan,
             'pelanggan_id' => $this->pelanggan_id,
             'pelanggan' => $this->relationLoaded('pelanggan') && $this->pelanggan
                 ? (new PelangganResource($this->pelanggan))->resolve()
@@ -26,14 +27,15 @@ class DistribusiResource extends JsonResource
             'jumlah_kg' => $this->jumlah_kg,
             'jenis_kendaraan' => $this->jenis_kendaraan,
             'jenis_kendaraan_label' => $this->getJenisKendaraanLabel(),
+            'bahan_bakar_liter' => $this->bahan_bakar_liter,
             'biaya_bahan_bakar' => $this->biaya_bahan_bakar,
-            'biaya_bahan_bakar_formatted' => 'Rp ' . number_format($this->biaya_bahan_bakar, 0, ',', '.'),
+            'biaya_bahan_bakar_formatted' => 'Rp '.number_format($this->biaya_bahan_bakar, 0, ',', '.'),
             'biaya_tenaga_kerja' => $this->biaya_tenaga_kerja,
-            'biaya_tenaga_kerja_formatted' => 'Rp ' . number_format($this->biaya_tenaga_kerja, 0, ',', '.'),
+            'biaya_tenaga_kerja_formatted' => 'Rp '.number_format($this->biaya_tenaga_kerja, 0, ',', '.'),
             'biaya_tambahan' => $this->biaya_tambahan,
-            'biaya_tambahan_formatted' => 'Rp ' . number_format($this->biaya_tambahan, 0, ',', '.'),
+            'biaya_tambahan_formatted' => 'Rp '.number_format($this->biaya_tambahan, 0, ',', '.'),
             'total_biaya_distribusi' => $this->total_biaya_distribusi,
-            'total_biaya_formatted' => 'Rp ' . number_format($this->total_biaya_distribusi, 0, ',', '.'),
+            'total_biaya_formatted' => 'Rp '.number_format($this->total_biaya_distribusi, 0, ',', '.'),
             'keterangan' => $this->keterangan,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),

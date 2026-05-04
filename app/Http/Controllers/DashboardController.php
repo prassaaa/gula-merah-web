@@ -68,7 +68,7 @@ class DashboardController extends Controller
             ->orderByDesc('id')
             ->limit(5)
             ->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'id' => $p->id,
                 'no_faktur' => $p->no_faktur,
                 'pelanggan' => $p->pelanggan?->nama ?? '-',
@@ -78,22 +78,16 @@ class DashboardController extends Controller
             ]);
 
         // Monthly sales chart data (last 6 months)
-        $monthlySales = Penjualan::select(
-            DB::raw('YEAR(tanggal) as year'),
-            DB::raw('MONTH(tanggal) as month'),
-            DB::raw('SUM(total_penjualan) as total')
-        )
-            ->groupBy('year', 'month')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->limit(6)
-            ->get()
-            ->reverse()
+        $monthlySales = Penjualan::orderBy('tanggal')
+            ->get(['tanggal', 'total_penjualan'])
+            ->groupBy(fn ($penjualan) => $penjualan->tanggal?->format('Y-m') ?? '-')
+            ->map(fn ($items) => [
+                'month' => $items->first()->tanggal?->format('M Y') ?? '-',
+                'total' => (int) $items->sum('total_penjualan'),
+            ])
             ->values()
-            ->map(fn($item) => [
-                'month' => date('M Y', mktime(0, 0, 0, $item->month, 1, $item->year)),
-                'total' => (int) $item->total,
-            ]);
+            ->slice(-6)
+            ->values();
 
         // Stock levels by product (latest stock per barang)
         $stockLevels = Stok::select('barang_id', DB::raw('MAX(id) as latest_id'))
@@ -101,6 +95,7 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($item) {
                 $latestStok = Stok::with('barang')->find($item->latest_id);
+
                 return [
                     'barang_id' => $latestStok->barang_id,
                     'nama_barang' => $latestStok->barang?->nama_barang ?? '-',
@@ -116,7 +111,7 @@ class DashboardController extends Controller
         )
             ->groupBy('jenis_kendaraan')
             ->get()
-            ->map(fn($d) => [
+            ->map(fn ($d) => [
                 'jenis_kendaraan' => $d->jenis_kendaraan,
                 'total' => (int) $d->total,
                 'count' => (int) $d->count,
@@ -128,7 +123,7 @@ class DashboardController extends Controller
             ->orderByDesc('sisa_hutang')
             ->limit(5)
             ->get()
-            ->map(fn($h) => [
+            ->map(fn ($h) => [
                 'id' => $h->id,
                 'pelanggan' => $h->penjualan?->pelanggan?->nama ?? '-',
                 'sisa_hutang' => $h->sisa_hutang,
@@ -172,7 +167,7 @@ class DashboardController extends Controller
             ->orderByDesc('id')
             ->limit(10)
             ->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'id' => $p->id,
                 'no_faktur' => $p->no_faktur,
                 'pelanggan' => $p->pelanggan?->nama ?? '-',
@@ -188,6 +183,7 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($item) {
                 $latestStok = Stok::with('barang')->find($item->latest_id);
+
                 return [
                     'barang_id' => $latestStok->barang_id,
                     'nama_barang' => $latestStok->barang?->nama_barang ?? '-',
@@ -200,7 +196,7 @@ class DashboardController extends Controller
             ->orderByDesc('tanggal')
             ->limit(5)
             ->get()
-            ->map(fn($d) => [
+            ->map(fn ($d) => [
                 'id' => $d->id,
                 'faktur' => $d->faktur_distribusi,
                 'pelanggan' => $d->pelanggan?->nama ?? '-',
@@ -224,7 +220,7 @@ class DashboardController extends Controller
     {
         $pelanggan = $user->pelanggan;
 
-        if (!$pelanggan) {
+        if (! $pelanggan) {
             return Inertia::render('dashboard/pelanggan', [
                 'stats' => null,
                 'recentPurchases' => [],
@@ -253,13 +249,13 @@ class DashboardController extends Controller
 
         // Hutang summary
         $hutangSummary = [
-            'totalHutang' => Hutang::whereHas('penjualan', fn($q) => $q->where('pelanggan_id', $pelanggan->id))
+            'totalHutang' => Hutang::whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
                 ->where('status', 'belum_lunas')
                 ->sum('sisa_hutang'),
-            'jumlahHutang' => Hutang::whereHas('penjualan', fn($q) => $q->where('pelanggan_id', $pelanggan->id))
+            'jumlahHutang' => Hutang::whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
                 ->where('status', 'belum_lunas')
                 ->count(),
-            'totalLunas' => Hutang::whereHas('penjualan', fn($q) => $q->where('pelanggan_id', $pelanggan->id))
+            'totalLunas' => Hutang::whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
                 ->where('status', 'lunas')
                 ->count(),
         ];
@@ -270,7 +266,7 @@ class DashboardController extends Controller
             ->orderByDesc('tanggal')
             ->limit(5)
             ->get()
-            ->map(fn($p) => [
+            ->map(fn ($p) => [
                 'id' => $p->id,
                 'no_faktur' => $p->no_faktur,
                 'barang' => $p->barang?->nama_barang ?? '-',
@@ -281,12 +277,12 @@ class DashboardController extends Controller
 
         // Recent hutang
         $recentHutang = Hutang::with(['penjualan.barang'])
-            ->whereHas('penjualan', fn($q) => $q->where('pelanggan_id', $pelanggan->id))
+            ->whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
             ->where('status', 'belum_lunas')
             ->orderByDesc('tanggal')
             ->limit(5)
             ->get()
-            ->map(fn($h) => [
+            ->map(fn ($h) => [
                 'id' => $h->id,
                 'faktur' => $h->faktur_penjualan,
                 'barang' => $h->penjualan?->barang?->nama_barang ?? '-',
