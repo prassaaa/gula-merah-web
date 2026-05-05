@@ -41,6 +41,7 @@ class DistribusiController extends Controller
     public function store(DistribusiRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $data['faktur_distribusi'] = $data['faktur_distribusi'] ?: $this->generateFakturDistribusi($data['tanggal']);
         $data['biaya_bahan_bakar'] = $this->normalizeRupiah($data['biaya_bahan_bakar'] ?? 0);
         $data['biaya_tenaga_kerja'] = $this->normalizeRupiah($data['biaya_tenaga_kerja'] ?? 0);
         $data['biaya_tambahan'] = $this->normalizeRupiah($data['biaya_tambahan'] ?? 0);
@@ -100,5 +101,18 @@ class DistribusiController extends Controller
         $amount = (float) ($value ?? 0);
 
         return $amount > 0 && $amount < 1000 ? $amount * 1000 : $amount;
+    }
+
+    private function generateFakturDistribusi(string $tanggal): string
+    {
+        $datePart = date('Ymd', strtotime($tanggal));
+        $prefix = "DST-{$datePart}";
+
+        $lastSequence = Distribusi::where('faktur_distribusi', 'like', "{$prefix}-%")
+            ->pluck('faktur_distribusi')
+            ->map(fn ($faktur) => (int) str_replace("{$prefix}-", '', $faktur))
+            ->max() ?? 0;
+
+        return $prefix.'-'.str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
     }
 }

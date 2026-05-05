@@ -73,6 +73,7 @@ class HutangController extends Controller
             ->map(function ($penjualan) {
                 return [
                     'id' => $penjualan->id,
+                    'faktur_penjualan' => $penjualan->no_faktur,
                     'label' => sprintf(
                         '%s - %s - %s (Rp %s)',
                         $penjualan->tanggal?->format('d/m/Y') ?? '-',
@@ -100,7 +101,8 @@ class HutangController extends Controller
 
         // Generate faktur if not provided
         if (empty($data['faktur_penjualan'])) {
-            $data['faktur_penjualan'] = 'HTG-'.date('Ymd').'-'.str_pad(Hutang::count() + 1, 4, '0', STR_PAD_LEFT);
+            $penjualan = Penjualan::findOrFail($data['penjualan_id']);
+            $data['faktur_penjualan'] = $penjualan->no_faktur;
         }
 
         Hutang::create($data);
@@ -138,6 +140,7 @@ class HutangController extends Controller
             ->map(function ($penjualan) {
                 return [
                     'id' => $penjualan->id,
+                    'faktur_penjualan' => $penjualan->no_faktur,
                     'label' => sprintf(
                         '%s - %s - %s (Rp %s)',
                         $penjualan->tanggal?->format('d/m/Y') ?? '-',

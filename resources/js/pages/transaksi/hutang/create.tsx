@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 
 interface PenjualanOption {
     id: number;
+    faktur_penjualan: string;
     label: string;
     nilai_faktur: number;
     dp_bayar: number;
@@ -52,6 +53,7 @@ export default function HutangCreate({ penjualans }: Props) {
             if (selected) {
                 setData(prev => ({
                     ...prev,
+                    faktur_penjualan: selected.faktur_penjualan,
                     nilai_faktur: selected.nilai_faktur,
                     dp_bayar: selected.dp_bayar,
                     sisa_hutang: selected.sisa_hutang,
@@ -117,8 +119,9 @@ export default function HutangCreate({ penjualans }: Props) {
                                     <Input
                                         id="faktur_penjualan"
                                         value={data.faktur_penjualan}
-                                        onChange={(e) => setData('faktur_penjualan', e.target.value)}
-                                        placeholder="Akan auto-generate jika kosong"
+                                        placeholder="Otomatis dari penjualan"
+                                        readOnly
+                                        className="bg-muted"
                                     />
                                     <InputError message={errors.faktur_penjualan} />
                                 </div>

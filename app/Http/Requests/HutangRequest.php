@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class HutangRequest extends FormRequest
@@ -17,12 +18,12 @@ class HutangRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'faktur_penjualan' => ['required', 'string', 'max:50'],
+            'faktur_penjualan' => ['nullable', 'string', 'max:50'],
             'penjualan_id' => ['required', 'exists:penjualans,id'],
             'tanggal' => ['required', 'date'],
             'nilai_faktur' => ['required', 'numeric', 'min:0'],

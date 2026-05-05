@@ -15,10 +15,11 @@ class DistribusiRequest extends FormRequest
     public function rules(): array
     {
         $distribusiId = $this->route('distribusi')?->id ?? $this->route('distribusi');
+        $fakturRule = $distribusiId ? 'required' : 'nullable';
 
         return [
             'faktur_distribusi' => [
-                'required',
+                $fakturRule,
                 'string',
                 'max:50',
                 Rule::unique('distribusis', 'faktur_distribusi')->ignore($distribusiId),

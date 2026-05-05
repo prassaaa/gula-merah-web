@@ -102,8 +102,9 @@ export default function DistribusiCreate({ pelanggans, barangs }: Props) {
                                     <Input
                                         id="faktur_distribusi"
                                         value={data.faktur_distribusi}
-                                        onChange={(e) => setData('faktur_distribusi', e.target.value)}
-                                        placeholder="DST-001"
+                                        placeholder="Otomatis saat disimpan"
+                                        readOnly
+                                        className="bg-muted"
                                     />
                                     <InputError message={errors.faktur_distribusi} />
                                 </div>

@@ -78,7 +78,7 @@ class KaryawanController extends Controller
     public function show(Karyawan $karyawan)
     {
         return Inertia::render('master/karyawan/show', [
-            'karyawan' => new KaryawanResource($karyawan),
+            'karyawan' => (new KaryawanResource($karyawan))->resolve(),
         ]);
     }
 
@@ -88,7 +88,7 @@ class KaryawanController extends Controller
     public function edit(Karyawan $karyawan)
     {
         return Inertia::render('master/karyawan/edit', [
-            'karyawan' => new KaryawanResource($karyawan),
+            'karyawan' => (new KaryawanResource($karyawan))->resolve(),
         ]);
     }
 
@@ -119,7 +119,7 @@ class KaryawanController extends Controller
      */
     public function toggleStatus(Karyawan $karyawan)
     {
-        $karyawan->update(['is_active' => !$karyawan->is_active]);
+        $karyawan->update(['is_active' => ! $karyawan->is_active]);
 
         return redirect()->back()
             ->with('success', 'Status karyawan berhasil diubah.');
