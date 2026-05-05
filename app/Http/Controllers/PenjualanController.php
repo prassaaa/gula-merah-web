@@ -7,9 +7,9 @@ use App\Http\Resources\BarangResource;
 use App\Http\Resources\PelangganResource;
 use App\Http\Resources\PenjualanResource;
 use App\Models\Barang;
-use App\Models\Hutang;
 use App\Models\Pelanggan;
 use App\Models\Penjualan;
+use App\Services\HutangLedgerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -17,6 +17,10 @@ use Inertia\Response;
 
 class PenjualanController extends Controller
 {
+    public function __construct(
+        private HutangLedgerService $hutangLedger
+    ) {}
+
     public function index(): Response
     {
         $penjualans = Penjualan::query()
@@ -140,22 +144,6 @@ class PenjualanController extends Controller
 
     private function syncHutang(Penjualan $penjualan): void
     {
-        if ($penjualan->metode_pembayaran === 'cash') {
-            $penjualan->hutangs()->delete();
-
-            return;
-        }
-
-        Hutang::updateOrCreate(
-            ['penjualan_id' => $penjualan->id],
-            [
-                'faktur_penjualan' => $penjualan->no_faktur,
-                'tanggal' => $penjualan->tanggal,
-                'nilai_faktur' => $penjualan->total_penjualan,
-                'dp_bayar' => $penjualan->pembayaran,
-                'sisa_hutang' => $penjualan->sisa_hutang,
-                'status' => $penjualan->status,
-            ]
-        );
+        $this->hutangLedger->syncFromPenjualan($penjualan);
     }
 }

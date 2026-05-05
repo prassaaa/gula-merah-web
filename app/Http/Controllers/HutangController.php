@@ -6,11 +6,16 @@ use App\Http\Requests\HutangRequest;
 use App\Http\Resources\HutangResource;
 use App\Models\Hutang;
 use App\Models\Penjualan;
+use App\Services\HutangLedgerService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HutangController extends Controller
 {
+    public function __construct(
+        private HutangLedgerService $hutangLedger
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -42,37 +47,37 @@ class HutangController extends Controller
             $query->whereDate('tanggal', '<=', $request->to_date);
         }
 
-        $hutangs = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
-        $summaryQuery = clone $query;
-
-        // Summary statistics
-        $summary = [
-            'total_hutang' => (clone $summaryQuery)->sum('sisa_hutang'),
-            'total_belum_lunas' => (clone $summaryQuery)->where('status', 'belum_lunas')->count(),
-            'total_lunas' => (clone $summaryQuery)->where('status', 'lunas')->count(),
-            'nilai_belum_lunas' => (clone $summaryQuery)->where('status', 'belum_lunas')->sum('sisa_hutang'),
-        ];
-
-        $pelangganSummaries = (clone $query)
-            ->where('status', 'belum_lunas')
-            ->get()
+        $filteredHutangs = (clone $query)->get();
+        $currentBalances = $filteredHutangs
             ->groupBy(fn ($hutang) => $hutang->penjualan?->pelanggan?->id ?? 'tanpa-pelanggan')
             ->map(function ($items) {
-                $first = $items->first();
+                $latest = $items
+                    ->sortByDesc(fn ($hutang) => $hutang->tanggal?->format('Y-m-d').'-'.str_pad((string) $hutang->id, 10, '0', STR_PAD_LEFT))
+                    ->first();
 
                 return [
-                    'pelanggan' => $first->penjualan?->pelanggan?->nama ?? 'Tanpa Pelanggan',
-                    'total_sisa_hutang' => $items->sum('sisa_hutang'),
+                    'pelanggan' => $latest->penjualan?->pelanggan?->nama ?? 'Tanpa Pelanggan',
+                    'total_sisa_hutang' => (float) $latest->sisa_hutang,
                     'jumlah_transaksi' => $items->count(),
                 ];
             })
             ->sortByDesc('total_sisa_hutang')
             ->values();
 
+        $hutangs = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
+
+        // Summary statistics
+        $summary = [
+            'total_hutang' => $currentBalances->sum('total_sisa_hutang'),
+            'total_belum_lunas' => $currentBalances->where('total_sisa_hutang', '>', 0)->count(),
+            'total_lunas' => $currentBalances->where('total_sisa_hutang', '<=', 0)->count(),
+            'nilai_belum_lunas' => $currentBalances->where('total_sisa_hutang', '>', 0)->sum('total_sisa_hutang'),
+        ];
+
         return Inertia::render('transaksi/hutang/index', [
             'hutangs' => HutangResource::collection($hutangs),
             'summary' => $summary,
-            'pelangganSummaries' => $pelangganSummaries,
+            'pelangganSummaries' => $currentBalances->where('total_sisa_hutang', '>', 0)->values(),
             'filters' => $request->only(['search', 'status', 'from_date', 'to_date']),
         ]);
     }
@@ -123,7 +128,9 @@ class HutangController extends Controller
             $data['faktur_penjualan'] = $penjualan->no_faktur;
         }
 
-        Hutang::create($data);
+        $hutang = Hutang::create($data);
+        $hutang->load('penjualan');
+        $this->hutangLedger->recalculateForPelanggan((int) $hutang->penjualan->pelanggan_id);
 
         return redirect()->route('hutang.index')
             ->with('success', 'Hutang berhasil ditambahkan.');
@@ -184,10 +191,12 @@ class HutangController extends Controller
     public function update(HutangRequest $request, Hutang $hutang)
     {
         $data = $request->validated();
-        $data['sisa_hutang'] = max(0, (float) $data['nilai_faktur'] - (float) $data['dp_bayar']);
-        $data['status'] = $data['sisa_hutang'] <= 0 ? 'lunas' : 'belum_lunas';
+        $oldPelangganId = $hutang->penjualan?->pelanggan_id;
+        $data['sisa_hutang'] = 0;
+        $data['status'] = 'belum_lunas';
 
         $hutang->update($data);
+        $hutang->load('penjualan');
 
         if ($hutang->penjualan) {
             $hutang->penjualan->update([
@@ -195,10 +204,15 @@ class HutangController extends Controller
                 'total_penjualan' => $data['nilai_faktur'],
                 'hutang' => $data['nilai_faktur'],
                 'pembayaran' => $data['dp_bayar'],
-                'sisa_hutang' => $data['sisa_hutang'],
-                'status' => $data['status'],
                 'metode_pembayaran' => 'hutang',
             ]);
+        }
+
+        if ($oldPelangganId) {
+            $this->hutangLedger->recalculateForPelanggan((int) $oldPelangganId);
+        }
+        if ($hutang->penjualan && $hutang->penjualan->pelanggan_id !== $oldPelangganId) {
+            $this->hutangLedger->recalculateForPelanggan((int) $hutang->penjualan->pelanggan_id);
         }
 
         return redirect()->route('hutang.index')
@@ -221,8 +235,11 @@ class HutangController extends Controller
      */
     public function bayar(Request $request, Hutang $hutang)
     {
+        $hutang->load('penjualan');
+        $currentBalance = $this->hutangLedger->currentBalanceForPelanggan((int) $hutang->penjualan->pelanggan_id);
+
         $request->validate([
-            'jumlah_bayar' => ['required', 'numeric', 'min:1', 'max:'.$hutang->sisa_hutang],
+            'jumlah_bayar' => ['required', 'numeric', 'min:1', 'max:'.$currentBalance],
         ], [
             'jumlah_bayar.required' => 'Jumlah bayar harus diisi.',
             'jumlah_bayar.min' => 'Jumlah bayar minimal Rp 1.',
@@ -230,25 +247,19 @@ class HutangController extends Controller
         ]);
 
         $jumlahBayar = $request->jumlah_bayar;
-        $newDpBayar = $hutang->dp_bayar + $jumlahBayar;
-        $newSisaHutang = $hutang->nilai_faktur - $newDpBayar;
-        $newStatus = $newSisaHutang <= 0 ? 'lunas' : 'belum_lunas';
+        $latestHutang = Hutang::whereHas('penjualan', fn ($query) => $query->where('pelanggan_id', $hutang->penjualan->pelanggan_id))
+            ->orderByDesc('tanggal')
+            ->orderByDesc('id')
+            ->firstOrFail();
 
-        $hutang->update([
+        $newDpBayar = (float) $latestHutang->dp_bayar + (float) $jumlahBayar;
+
+        $latestHutang->update([
             'dp_bayar' => $newDpBayar,
-            'sisa_hutang' => max(0, $newSisaHutang),
-            'status' => $newStatus,
         ]);
 
-        // Update related penjualan if exists
-        if ($hutang->penjualan) {
-            $hutang->penjualan->update([
-                'pembayaran' => $newDpBayar,
-                'sisa_hutang' => max(0, $newSisaHutang),
-                'status' => $newStatus,
-                'metode_pembayaran' => 'hutang',
-            ]);
-        }
+        $this->hutangLedger->recalculateForPelanggan((int) $hutang->penjualan->pelanggan_id);
+        $newStatus = $this->hutangLedger->currentBalanceForPelanggan((int) $hutang->penjualan->pelanggan_id) <= 0 ? 'lunas' : 'belum_lunas';
 
         return redirect()->back()
             ->with('success', 'Pembayaran berhasil dicatat. '.($newStatus === 'lunas' ? 'Hutang LUNAS!' : ''));
