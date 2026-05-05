@@ -117,7 +117,7 @@ class HutangController extends Controller
         $hutang->load(['penjualan.pelanggan', 'penjualan.barang']);
 
         return Inertia::render('transaksi/hutang/show', [
-            'hutang' => new HutangResource($hutang),
+            'hutang' => (new HutangResource($hutang))->resolve(),
         ]);
     }
 
@@ -152,7 +152,7 @@ class HutangController extends Controller
             });
 
         return Inertia::render('transaksi/hutang/edit', [
-            'hutang' => new HutangResource($hutang),
+            'hutang' => (new HutangResource($hutang))->resolve(),
             'penjualans' => $penjualans,
         ]);
     }
