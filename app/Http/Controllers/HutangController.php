@@ -21,6 +21,8 @@ class HutangController extends Controller
      */
     public function index(Request $request)
     {
+        $this->hutangLedger->recalculateAll();
+
         $query = Hutang::with(['penjualan.pelanggan', 'penjualan.barang']);
 
         // Search

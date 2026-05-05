@@ -83,10 +83,16 @@ class PenjualanController extends Controller
     public function update(PenjualanRequest $request, Penjualan $penjualan): RedirectResponse
     {
         $data = $request->validated();
+        $oldPelangganId = (int) $penjualan->pelanggan_id;
 
-        DB::transaction(function () use ($data, $penjualan) {
+        DB::transaction(function () use ($data, $penjualan, $oldPelangganId) {
             $penjualan->update($this->preparePenjualanData($data, $penjualan));
-            $this->syncHutang($penjualan->fresh());
+            $freshPenjualan = $penjualan->fresh();
+            $this->syncHutang($freshPenjualan);
+
+            if ($freshPenjualan->pelanggan_id !== $oldPelangganId) {
+                $this->hutangLedger->recalculateForPelanggan($oldPelangganId);
+            }
         });
 
         return redirect()->route('penjualan.index')
@@ -95,7 +101,12 @@ class PenjualanController extends Controller
 
     public function destroy(Penjualan $penjualan): RedirectResponse
     {
-        $penjualan->delete();
+        $pelangganId = (int) $penjualan->pelanggan_id;
+
+        DB::transaction(function () use ($penjualan, $pelangganId) {
+            $penjualan->delete();
+            $this->hutangLedger->recalculateForPelanggan($pelangganId);
+        });
 
         return redirect()->route('penjualan.index')
             ->with('success', 'Data penjualan berhasil dihapus.');

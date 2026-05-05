@@ -23,7 +23,7 @@ class HutangSeeder extends Seeder
                 [
                     'faktur_penjualan' => $penjualan->no_faktur,
                     'tanggal' => $penjualan->tanggal,
-                    'nilai_faktur' => $penjualan->total_penjualan,
+                    'nilai_faktur' => $penjualan->hutang,
                     'dp_bayar' => $penjualan->pembayaran,
                     'sisa_hutang' => $penjualan->sisa_hutang,
                     'status' => $penjualan->sisa_hutang > 0 ? 'belum_lunas' : 'lunas',

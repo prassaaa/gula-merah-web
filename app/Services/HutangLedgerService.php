@@ -21,7 +21,7 @@ class HutangLedgerService
             [
                 'faktur_penjualan' => $penjualan->no_faktur,
                 'tanggal' => $penjualan->tanggal,
-                'nilai_faktur' => $penjualan->total_penjualan,
+                'nilai_faktur' => $this->invoiceAmount($penjualan),
                 'dp_bayar' => $penjualan->pembayaran,
                 'sisa_hutang' => 0,
                 'status' => 'belum_lunas',
@@ -41,18 +41,20 @@ class HutangLedgerService
             ->orderBy('id')
             ->get()
             ->each(function (Hutang $hutang) use (&$balance) {
-                $balance += (float) $hutang->nilai_faktur - (float) $hutang->dp_bayar;
+                $nilaiFaktur = $this->effectiveNilaiFaktur($hutang);
+                $balance += $nilaiFaktur - (float) $hutang->dp_bayar;
                 $balance = max(0, $balance);
                 $status = $balance <= 0 ? 'lunas' : 'belum_lunas';
 
                 $hutang->forceFill([
+                    'nilai_faktur' => $nilaiFaktur,
                     'sisa_hutang' => $balance,
                     'status' => $status,
                 ])->save();
 
                 if ($hutang->penjualan) {
                     $hutang->penjualan->forceFill([
-                        'hutang' => $hutang->nilai_faktur,
+                        'hutang' => $nilaiFaktur,
                         'pembayaran' => $hutang->dp_bayar,
                         'sisa_hutang' => $balance,
                         'status' => $status,
@@ -60,6 +62,16 @@ class HutangLedgerService
                     ])->save();
                 }
             });
+    }
+
+    public function recalculateAll(): void
+    {
+        Hutang::with('penjualan')
+            ->get()
+            ->pluck('penjualan.pelanggan_id')
+            ->filter()
+            ->unique()
+            ->each(fn ($pelangganId) => $this->recalculateForPelanggan((int) $pelangganId));
     }
 
     public function currentBalanceForPelanggan(int $pelangganId): float
@@ -70,5 +82,37 @@ class HutangLedgerService
             ->first();
 
         return (float) ($latest?->sisa_hutang ?? 0);
+    }
+
+    private function effectiveNilaiFaktur(Hutang $hutang): float
+    {
+        if ($hutang->penjualan) {
+            return $this->invoiceAmount($hutang->penjualan);
+        }
+
+        $nilaiFaktur = (float) $hutang->nilai_faktur;
+
+        if ($nilaiFaktur > 0) {
+            return $nilaiFaktur;
+        }
+
+        return (float) ($hutang->penjualan?->total_penjualan ?? 0);
+    }
+
+    private function invoiceAmount(Penjualan $penjualan): float
+    {
+        $calculated = (float) $penjualan->jumlah_kg * (float) $penjualan->harga_per_kg;
+
+        if ($calculated > 0) {
+            return $calculated;
+        }
+
+        $hutang = (float) $penjualan->hutang;
+
+        if ($hutang > 0) {
+            return $hutang;
+        }
+
+        return (float) $penjualan->total_penjualan;
     }
 }
