@@ -25,6 +25,11 @@ import { Edit, Eye, Plus, Trash2, Search, CreditCard, AlertCircle, CheckCircle }
 interface Props {
     hutangs: PaginatedData<Hutang>;
     summary: HutangSummary;
+    pelangganSummaries: Array<{
+        pelanggan: string;
+        total_sisa_hutang: number;
+        jumlah_transaksi: number;
+    }>;
     filters: {
         search?: string;
         status?: string;
@@ -46,7 +51,7 @@ const formatCurrency = (value: number) => {
     }).format(value);
 };
 
-export default function HutangIndex({ hutangs, summary, filters }: Props) {
+export default function HutangIndex({ hutangs, summary, pelangganSummaries, filters }: Props) {
     const handleDelete = (id: number) => {
         if (confirm('Apakah Anda yakin ingin menghapus data hutang ini?')) {
             router.delete(`/hutang/${id}`);
@@ -126,6 +131,25 @@ export default function HutangIndex({ hutangs, summary, filters }: Props) {
                         </CardContent>
                     </Card>
                 </div>
+
+                {pelangganSummaries.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-sm font-medium">Total Hutang Per Pelanggan</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid gap-3 md:grid-cols-3">
+                                {pelangganSummaries.map((item) => (
+                                    <div key={item.pelanggan} className="rounded-md border p-3">
+                                        <p className="font-medium">{item.pelanggan}</p>
+                                        <p className="text-lg font-bold">{formatCurrency(item.total_sisa_hutang)}</p>
+                                        <p className="text-xs text-muted-foreground">{item.jumlah_transaksi} transaksi belum lunas</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
                 {/* Filters */}
                 <div className="flex flex-wrap gap-4">

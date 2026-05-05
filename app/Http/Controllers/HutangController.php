@@ -43,18 +43,36 @@ class HutangController extends Controller
         }
 
         $hutangs = $query->orderBy('tanggal', 'desc')->paginate(10)->withQueryString();
+        $summaryQuery = clone $query;
 
         // Summary statistics
         $summary = [
-            'total_hutang' => Hutang::sum('sisa_hutang'),
-            'total_belum_lunas' => Hutang::where('status', 'belum_lunas')->count(),
-            'total_lunas' => Hutang::where('status', 'lunas')->count(),
-            'nilai_belum_lunas' => Hutang::where('status', 'belum_lunas')->sum('sisa_hutang'),
+            'total_hutang' => (clone $summaryQuery)->sum('sisa_hutang'),
+            'total_belum_lunas' => (clone $summaryQuery)->where('status', 'belum_lunas')->count(),
+            'total_lunas' => (clone $summaryQuery)->where('status', 'lunas')->count(),
+            'nilai_belum_lunas' => (clone $summaryQuery)->where('status', 'belum_lunas')->sum('sisa_hutang'),
         ];
+
+        $pelangganSummaries = (clone $query)
+            ->where('status', 'belum_lunas')
+            ->get()
+            ->groupBy(fn ($hutang) => $hutang->penjualan?->pelanggan?->id ?? 'tanpa-pelanggan')
+            ->map(function ($items) {
+                $first = $items->first();
+
+                return [
+                    'pelanggan' => $first->penjualan?->pelanggan?->nama ?? 'Tanpa Pelanggan',
+                    'total_sisa_hutang' => $items->sum('sisa_hutang'),
+                    'jumlah_transaksi' => $items->count(),
+                ];
+            })
+            ->sortByDesc('total_sisa_hutang')
+            ->values();
 
         return Inertia::render('transaksi/hutang/index', [
             'hutangs' => HutangResource::collection($hutangs),
             'summary' => $summary,
+            'pelangganSummaries' => $pelangganSummaries,
             'filters' => $request->only(['search', 'status', 'from_date', 'to_date']),
         ]);
     }
