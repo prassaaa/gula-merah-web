@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Hutang;
 use App\Models\Penjualan;
+use Illuminate\Support\Collection;
 
 class HutangLedgerService
 {
@@ -33,35 +34,36 @@ class HutangLedgerService
 
     public function recalculateForPelanggan(int $pelangganId): void
     {
-        $balance = 0.0;
-
-        Hutang::with('penjualan')
+        $hutangs = Hutang::with('penjualan')
             ->whereHas('penjualan', fn ($query) => $query->where('pelanggan_id', $pelangganId))
             ->orderBy('tanggal')
             ->orderBy('id')
-            ->get()
-            ->each(function (Hutang $hutang) use (&$balance) {
-                $nilaiFaktur = $this->effectiveNilaiFaktur($hutang);
-                $balance += $nilaiFaktur - (float) $hutang->dp_bayar;
-                $balance = max(0, $balance);
-                $status = $balance <= 0 ? 'lunas' : 'belum_lunas';
+            ->get();
 
-                $hutang->forceFill([
-                    'nilai_faktur' => $nilaiFaktur,
+        $balance = $this->openingBalance($hutangs);
+
+        $hutangs->each(function (Hutang $hutang) use (&$balance) {
+            $nilaiFaktur = $this->effectiveNilaiFaktur($hutang);
+            $balance += $nilaiFaktur - (float) $hutang->dp_bayar;
+            $balance = max(0, $balance);
+            $status = $balance <= 0 ? 'lunas' : 'belum_lunas';
+
+            $hutang->forceFill([
+                'nilai_faktur' => $nilaiFaktur,
+                'sisa_hutang' => $balance,
+                'status' => $status,
+            ])->save();
+
+            if ($hutang->penjualan) {
+                $hutang->penjualan->forceFill([
+                    'hutang' => $nilaiFaktur,
+                    'pembayaran' => $hutang->dp_bayar,
                     'sisa_hutang' => $balance,
                     'status' => $status,
+                    'metode_pembayaran' => 'hutang',
                 ])->save();
-
-                if ($hutang->penjualan) {
-                    $hutang->penjualan->forceFill([
-                        'hutang' => $nilaiFaktur,
-                        'pembayaran' => $hutang->dp_bayar,
-                        'sisa_hutang' => $balance,
-                        'status' => $status,
-                        'metode_pembayaran' => 'hutang',
-                    ])->save();
-                }
-            });
+            }
+        });
     }
 
     public function recalculateAll(): void
@@ -97,6 +99,19 @@ class HutangLedgerService
         }
 
         return (float) ($hutang->penjualan?->total_penjualan ?? 0);
+    }
+
+    private function openingBalance(Collection $hutangs): float
+    {
+        $firstHutang = $hutangs->first();
+
+        if (! $firstHutang) {
+            return 0.0;
+        }
+
+        $firstDelta = $this->effectiveNilaiFaktur($firstHutang) - (float) $firstHutang->dp_bayar;
+
+        return max(0, (float) $firstHutang->sisa_hutang - $firstDelta);
     }
 
     private function invoiceAmount(Penjualan $penjualan): float

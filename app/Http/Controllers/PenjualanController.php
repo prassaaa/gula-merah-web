@@ -35,11 +35,16 @@ class PenjualanController extends Controller
 
     public function create(): Response
     {
+        $this->hutangLedger->recalculateAll();
+
         $pelanggans = Pelanggan::where('is_active', true)->orderBy('nama')->get();
         $barangs = Barang::where('is_active', true)->orderBy('nama_barang')->get();
 
         return Inertia::render('transaksi/penjualan/create', [
-            'pelanggans' => PelangganResource::collection($pelanggans)->resolve(),
+            'pelanggans' => $pelanggans->map(fn ($pelanggan) => [
+                ...(new PelangganResource($pelanggan))->resolve(),
+                'saldo_hutang' => $this->hutangLedger->currentBalanceForPelanggan((int) $pelanggan->id),
+            ]),
             'barangs' => BarangResource::collection($barangs)->resolve(),
         ]);
     }
@@ -131,7 +136,7 @@ class PenjualanController extends Controller
         }
 
         $data['hutang'] = $data['total_penjualan'];
-        $data['pembayaran'] = min((float) ($data['pembayaran'] ?? 0), $data['total_penjualan']);
+        $data['pembayaran'] = max(0, (float) ($data['pembayaran'] ?? 0));
         $data['sisa_hutang'] = max(0, $data['hutang'] - $data['pembayaran']);
         $data['status'] = $data['sisa_hutang'] <= 0 ? 'lunas' : 'belum_lunas';
 

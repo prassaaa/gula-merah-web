@@ -68,6 +68,7 @@ export interface Pelanggan {
     telepon: string | null;
     email: string | null;
     jarak_km: number;
+    saldo_hutang?: number;
     is_active: boolean;
     created_at: string;
     updated_at: string;

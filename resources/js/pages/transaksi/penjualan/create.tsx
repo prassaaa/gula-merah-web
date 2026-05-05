@@ -39,9 +39,11 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
     });
 
     const selectedBarang = barangs.find((b) => b.id.toString() === data.barang_id);
+    const selectedPelanggan = pelanggans.find((p) => p.id.toString() === data.pelanggan_id);
+    const saldoHutangSebelumnya = Number(selectedPelanggan?.saldo_hutang || 0);
     const totalPenjualan = Number(data.jumlah_kg) * Number(data.harga_per_kg);
     const pembayaran = data.metode_pembayaran === 'cash' ? totalPenjualan : Number(data.pembayaran || 0);
-    const sisaHutang = data.metode_pembayaran === 'hutang' ? Math.max(0, totalPenjualan - pembayaran) : 0;
+    const sisaHutang = data.metode_pembayaran === 'hutang' ? Math.max(0, saldoHutangSebelumnya + totalPenjualan - pembayaran) : 0;
 
     const handleBarangChange = (value: string) => {
         setData('barang_id', value);
@@ -179,7 +181,7 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
                                 </div>
                             </div>
 
-                            <div className="grid gap-4 md:grid-cols-3">
+                            <div className="grid gap-4 md:grid-cols-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="metode_pembayaran">Metode Pembayaran</Label>
                                     <Select
@@ -210,6 +212,14 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
                                         placeholder="0"
                                     />
                                     <InputError message={errors.pembayaran} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Saldo Hutang Sebelumnya</Label>
+                                    <Input
+                                        value={`Rp ${saldoHutangSebelumnya.toLocaleString('id-ID')}`}
+                                        disabled
+                                        className="bg-muted"
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Sisa Hutang</Label>
