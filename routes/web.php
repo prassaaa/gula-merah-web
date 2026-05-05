@@ -30,19 +30,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:admin,karyawan'])->group(function () {
         // Master Data - View only for karyawan
         Route::get('barang', [BarangController::class, 'index'])->name('barang.index');
-        Route::get('barang/{barang}', [BarangController::class, 'show'])->name('barang.show');
+        Route::get('barang/{barang}', [BarangController::class, 'show'])->whereNumber('barang')->name('barang.show');
         Route::get('pelanggan', [PelangganController::class, 'index'])->name('pelanggan.index');
-        Route::get('pelanggan/{pelanggan}', [PelangganController::class, 'show'])->name('pelanggan.show');
+        Route::get('pelanggan/{pelanggan}', [PelangganController::class, 'show'])->whereNumber('pelanggan')->name('pelanggan.show');
 
         // Transaksi - Full access for both admin and karyawan
-        Route::resource('stok', StokController::class);
-        Route::resource('penjualan', PenjualanController::class);
-        Route::resource('distribusi', DistribusiController::class);
+        Route::resource('stok', StokController::class)->whereNumber('stok');
+        Route::resource('penjualan', PenjualanController::class)->whereNumber('penjualan');
+        Route::resource('distribusi', DistribusiController::class)->whereNumber('distribusi');
 
         // Hutang - View and payment
         Route::get('hutang', [HutangController::class, 'index'])->name('hutang.index');
-        Route::get('hutang/{hutang}', [HutangController::class, 'show'])->name('hutang.show');
-        Route::post('hutang/{hutang}/bayar', [HutangController::class, 'bayar'])->name('hutang.bayar');
+        Route::get('hutang/{hutang}', [HutangController::class, 'show'])->whereNumber('hutang')->name('hutang.show');
+        Route::post('hutang/{hutang}/bayar', [HutangController::class, 'bayar'])->whereNumber('hutang')->name('hutang.bayar');
     });
 
     // ==========================================
@@ -52,26 +52,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Master Data - Full CRUD
         Route::get('barang/create', [BarangController::class, 'create'])->name('barang.create');
         Route::post('barang', [BarangController::class, 'store'])->name('barang.store');
-        Route::get('barang/{barang}/edit', [BarangController::class, 'edit'])->name('barang.edit');
-        Route::put('barang/{barang}', [BarangController::class, 'update'])->name('barang.update');
-        Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->name('barang.destroy');
+        Route::get('barang/{barang}/edit', [BarangController::class, 'edit'])->whereNumber('barang')->name('barang.edit');
+        Route::put('barang/{barang}', [BarangController::class, 'update'])->whereNumber('barang')->name('barang.update');
+        Route::delete('barang/{barang}', [BarangController::class, 'destroy'])->whereNumber('barang')->name('barang.destroy');
 
         Route::get('pelanggan/create', [PelangganController::class, 'create'])->name('pelanggan.create');
         Route::post('pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
-        Route::get('pelanggan/{pelanggan}/edit', [PelangganController::class, 'edit'])->name('pelanggan.edit');
-        Route::put('pelanggan/{pelanggan}', [PelangganController::class, 'update'])->name('pelanggan.update');
-        Route::delete('pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
+        Route::get('pelanggan/{pelanggan}/edit', [PelangganController::class, 'edit'])->whereNumber('pelanggan')->name('pelanggan.edit');
+        Route::put('pelanggan/{pelanggan}', [PelangganController::class, 'update'])->whereNumber('pelanggan')->name('pelanggan.update');
+        Route::delete('pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->whereNumber('pelanggan')->name('pelanggan.destroy');
 
         // Karyawan - Full CRUD (Admin only)
-        Route::resource('karyawan', KaryawanController::class);
-        Route::patch('karyawan/{karyawan}/toggle-status', [KaryawanController::class, 'toggleStatus'])->name('karyawan.toggle-status');
+        Route::resource('karyawan', KaryawanController::class)->whereNumber('karyawan');
+        Route::patch('karyawan/{karyawan}/toggle-status', [KaryawanController::class, 'toggleStatus'])->whereNumber('karyawan')->name('karyawan.toggle-status');
 
         // Hutang - Full CRUD
         Route::get('hutang/create', [HutangController::class, 'create'])->name('hutang.create');
         Route::post('hutang', [HutangController::class, 'store'])->name('hutang.store');
-        Route::get('hutang/{hutang}/edit', [HutangController::class, 'edit'])->name('hutang.edit');
-        Route::put('hutang/{hutang}', [HutangController::class, 'update'])->name('hutang.update');
-        Route::delete('hutang/{hutang}', [HutangController::class, 'destroy'])->name('hutang.destroy');
+        Route::get('hutang/{hutang}/edit', [HutangController::class, 'edit'])->whereNumber('hutang')->name('hutang.edit');
+        Route::put('hutang/{hutang}', [HutangController::class, 'update'])->whereNumber('hutang')->name('hutang.update');
+        Route::delete('hutang/{hutang}', [HutangController::class, 'destroy'])->whereNumber('hutang')->name('hutang.destroy');
 
         // Forecasting - Admin only
         Route::prefix('forecast')->name('forecast.')->group(function () {
@@ -93,7 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ==========================================
     Route::middleware(['role:pelanggan'])->prefix('my')->name('my.')->group(function () {
         Route::get('hutang', [PelangganHutangController::class, 'index'])->name('hutang.index');
-        Route::get('hutang/{hutang}', [PelangganHutangController::class, 'show'])->name('hutang.show');
+        Route::get('hutang/{hutang}', [PelangganHutangController::class, 'show'])->whereNumber('hutang')->name('hutang.show');
         Route::get('penjualan', [PelangganHutangController::class, 'penjualanIndex'])->name('penjualan.index');
     });
 });
