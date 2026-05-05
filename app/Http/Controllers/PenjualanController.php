@@ -102,7 +102,7 @@ class PenjualanController extends Controller
         $data['total_penjualan'] = (float) $data['jumlah_kg'] * (float) $data['harga_per_kg'];
         $data['metode_pembayaran'] = $data['metode_pembayaran'] ?? 'hutang';
 
-        if (empty($data['no_faktur'])) {
+        if ($penjualan === null || empty($data['no_faktur'])) {
             $data['no_faktur'] = $this->generateNoFaktur((int) $data['barang_id'], $data['tanggal'], $penjualan?->id);
         }
 

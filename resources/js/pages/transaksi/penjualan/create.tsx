@@ -43,25 +43,16 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
     const pembayaran = data.metode_pembayaran === 'cash' ? totalPenjualan : Number(data.pembayaran || 0);
     const sisaHutang = data.metode_pembayaran === 'hutang' ? Math.max(0, totalPenjualan - pembayaran) : 0;
 
-    const generateFaktur = (barangId: string, tanggal: string) => {
-        const barang = barangs.find((b) => b.id.toString() === barangId);
-        if (!barang || !tanggal) return '';
-
-        return `INV-PJ-${barang.kode_barang}-${tanggal.replaceAll('-', '')}-001`;
-    };
-
     const handleBarangChange = (value: string) => {
         setData('barang_id', value);
         const barang = barangs.find((b) => b.id.toString() === value);
         if (barang) {
             setData('harga_per_kg', barang.harga_per_kg.toString());
         }
-        setData('no_faktur', generateFaktur(value, data.tanggal));
     };
 
     const handleTanggalChange = (value: string) => {
         setData('tanggal', value);
-        setData('no_faktur', generateFaktur(data.barang_id, value));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -100,8 +91,7 @@ export default function PenjualanCreate({ barangs, pelanggans }: Props) {
                                     <Input
                                         id="no_faktur"
                                         value={data.no_faktur}
-                                        onChange={(e) => setData('no_faktur', e.target.value)}
-                                        placeholder="Otomatis setelah barang dan tanggal dipilih"
+                                        placeholder="Otomatis saat disimpan"
                                         readOnly
                                         className="bg-muted"
                                     />

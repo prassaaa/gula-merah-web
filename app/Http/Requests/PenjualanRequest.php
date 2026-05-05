@@ -12,6 +12,15 @@ class PenjualanRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->route('penjualan')) {
+            $this->merge([
+                'no_faktur' => null,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         $penjualanId = $this->route('penjualan')?->id ?? $this->route('penjualan');
