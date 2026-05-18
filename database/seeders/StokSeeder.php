@@ -19,7 +19,7 @@ class StokSeeder extends Seeder
      */
     public function run(): void
     {
-        $csvPath = database_path('data/stok.csv');
+        $csvPath = database_path('data/revisi.csv');
 
         if (! file_exists($csvPath)) {
             $this->command->warn("File {$csvPath} tidak ditemukan.");
@@ -82,12 +82,52 @@ class StokSeeder extends Seeder
 
     private function parseDate(string $dateStr): ?string
     {
-        try {
-            // Format: "14 Jul 2024"
-            return Carbon::createFromFormat('d M Y', trim($dateStr))->format('Y-m-d');
-        } catch (\Exception $e) {
-            return null;
+        $dateStr = $this->normalizeMonth(trim($dateStr));
+
+        foreach (['d M Y', 'd F Y'] as $format) {
+            try {
+                $date = Carbon::createFromFormat($format, $dateStr);
+
+                if ($date !== false) {
+                    return $date->format('Y-m-d');
+                }
+            } catch (\Exception) {
+                continue;
+            }
         }
+
+        return null;
+    }
+
+    private function normalizeMonth(string $dateStr): string
+    {
+        $months = [
+            'Januari' => 'January',
+            'Jan' => 'Jan',
+            'Februari' => 'February',
+            'Feb' => 'Feb',
+            'Maret' => 'March',
+            'Mar' => 'Mar',
+            'April' => 'April',
+            'Apr' => 'Apr',
+            'Mei' => 'May',
+            'Juni' => 'June',
+            'Jun' => 'Jun',
+            'Juli' => 'July',
+            'Jul' => 'Jul',
+            'Agustus' => 'August',
+            'Agu' => 'Aug',
+            'September' => 'September',
+            'Sep' => 'Sep',
+            'Oktober' => 'October',
+            'Okt' => 'Oct',
+            'November' => 'November',
+            'Nov' => 'Nov',
+            'Desember' => 'December',
+            'Des' => 'Dec',
+        ];
+
+        return str_replace(array_keys($months), array_values($months), $dateStr);
     }
 
     private function parseNumber(string $value): float
