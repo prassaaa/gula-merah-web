@@ -19,7 +19,7 @@ class DistribusiSeeder extends Seeder
      */
     public function run(): void
     {
-        $csvPath = database_path('data/distribusi.csv');
+        $csvPath = database_path('data/Salinan Salinan datagula2 - distribusi.csv');
 
         if (! file_exists($csvPath)) {
             $this->command->warn("File {$csvPath} tidak ditemukan.");
@@ -72,19 +72,32 @@ class DistribusiSeeder extends Seeder
     private function parseDate(string $dateStr): ?string
     {
         try {
-            // Format: "14 Juli 2024"
-            $months = [
-                'Januari' => 'January', 'Februari' => 'February', 'Maret' => 'March',
-                'April' => 'April', 'Mei' => 'May', 'Juni' => 'June',
-                'Juli' => 'July', 'Agustus' => 'August', 'September' => 'September',
-                'Oktober' => 'October', 'November' => 'November', 'Desember' => 'December',
-            ];
-            $dateStr = str_replace(array_keys($months), array_values($months), trim($dateStr));
+            $normalized = $this->normalizeMonth(trim($dateStr));
 
-            return Carbon::createFromFormat('d F Y', $dateStr)->format('Y-m-d');
-        } catch (\Exception $e) {
+            return Carbon::createFromFormat('d M Y', $normalized)->format('Y-m-d');
+        } catch (\Exception) {
             return null;
         }
+    }
+
+    private function normalizeMonth(string $dateStr): string
+    {
+        $months = [
+            'Januari' => 'Jan', 'January' => 'Jan', 'Jan' => 'Jan',
+            'Februari' => 'Feb', 'February' => 'Feb', 'Feb' => 'Feb',
+            'Maret' => 'Mar', 'March' => 'Mar', 'Mar' => 'Mar',
+            'April' => 'Apr', 'Apr' => 'Apr',
+            'Mei' => 'May', 'May' => 'May',
+            'Juni' => 'Jun', 'June' => 'Jun', 'Jun' => 'Jun',
+            'Juli' => 'Jul', 'July' => 'Jul', 'Jul' => 'Jul',
+            'Agustus' => 'Aug', 'August' => 'Aug', 'Agu' => 'Aug', 'Aug' => 'Aug',
+            'September' => 'Sep', 'Sept' => 'Sep', 'Sep' => 'Sep',
+            'Oktober' => 'Oct', 'October' => 'Oct', 'Okt' => 'Oct', 'Oct' => 'Oct',
+            'November' => 'Nov', 'Nov' => 'Nov',
+            'Desember' => 'Dec', 'December' => 'Dec', 'Des' => 'Dec', 'Dec' => 'Dec',
+        ];
+
+        return str_ireplace(array_keys($months), array_values($months), $dateStr);
     }
 
     private function parseNumber(string $value): float

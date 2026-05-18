@@ -18,7 +18,7 @@ class PenjualanSeeder extends Seeder
      */
     public function run(): void
     {
-        $csvPath = database_path('data/indukpenjualan.csv');
+        $csvPath = database_path('data/Salinan Salinan datagula2 - indukpenjualan.csv');
 
         if (! file_exists($csvPath)) {
             $this->command->warn("File {$csvPath} tidak ditemukan.");
@@ -71,10 +71,32 @@ class PenjualanSeeder extends Seeder
     private function parseDate(string $dateStr): ?string
     {
         try {
-            return Carbon::createFromFormat('d M Y', trim($dateStr))->format('Y-m-d');
-        } catch (\Exception $e) {
+            $normalized = $this->normalizeMonth(trim($dateStr));
+
+            return Carbon::createFromFormat('d M Y', $normalized)->format('Y-m-d');
+        } catch (\Exception) {
             return null;
         }
+    }
+
+    private function normalizeMonth(string $dateStr): string
+    {
+        $months = [
+            'Januari' => 'Jan', 'January' => 'Jan', 'Jan' => 'Jan',
+            'Februari' => 'Feb', 'February' => 'Feb', 'Feb' => 'Feb',
+            'Maret' => 'Mar', 'March' => 'Mar', 'Mar' => 'Mar',
+            'April' => 'Apr', 'Apr' => 'Apr',
+            'Mei' => 'May', 'May' => 'May',
+            'Juni' => 'Jun', 'June' => 'Jun', 'Jun' => 'Jun',
+            'Juli' => 'Jul', 'July' => 'Jul', 'Jul' => 'Jul',
+            'Agustus' => 'Aug', 'August' => 'Aug', 'Agu' => 'Aug', 'Aug' => 'Aug',
+            'September' => 'Sep', 'Sept' => 'Sep', 'Sep' => 'Sep',
+            'Oktober' => 'Oct', 'October' => 'Oct', 'Okt' => 'Oct', 'Oct' => 'Oct',
+            'November' => 'Nov', 'Nov' => 'Nov',
+            'Desember' => 'Dec', 'December' => 'Dec', 'Des' => 'Dec', 'Dec' => 'Dec',
+        ];
+
+        return str_ireplace(array_keys($months), array_values($months), $dateStr);
     }
 
     private function parseNumber(string $value): float
