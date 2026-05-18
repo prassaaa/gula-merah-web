@@ -9,7 +9,9 @@ use App\Models\Karyawan;
 use App\Models\Pelanggan;
 use App\Models\Penjualan;
 use App\Models\Stok;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -40,6 +42,7 @@ class DashboardController extends Controller
     {
         $currentMonth = now()->month;
         $currentYear = now()->year;
+        $currentBalances = $this->currentHutangBalances();
 
         // Summary statistics
         $stats = [
@@ -58,8 +61,8 @@ class DashboardController extends Controller
             'jumlahDistribusiBulanIni' => Distribusi::whereMonth('tanggal', $currentMonth)
                 ->whereYear('tanggal', $currentYear)
                 ->count(),
-            'totalHutangBelumLunas' => Hutang::where('status', 'belum_lunas')->sum('sisa_hutang'),
-            'jumlahHutangBelumLunas' => Hutang::where('status', 'belum_lunas')->count(),
+            'totalHutangBelumLunas' => $currentBalances->sum('total_sisa_hutang'),
+            'jumlahHutangBelumLunas' => $currentBalances->where('total_sisa_hutang', '>', 0)->count(),
         ];
 
         // Recent sales (last 5 transactions)
@@ -117,17 +120,16 @@ class DashboardController extends Controller
                 'count' => (int) $d->count,
             ]);
 
-        // Top debtors
-        $topDebtors = Hutang::with(['penjualan.pelanggan'])
-            ->where('status', 'belum_lunas')
-            ->orderByDesc('sisa_hutang')
-            ->limit(5)
-            ->get()
-            ->map(fn ($h) => [
-                'id' => $h->id,
-                'pelanggan' => $h->penjualan?->pelanggan?->nama ?? '-',
-                'sisa_hutang' => $h->sisa_hutang,
-                'tanggal' => $h->tanggal?->format('d M Y'),
+        $topDebtors = $currentBalances
+            ->where('total_sisa_hutang', '>', 0)
+            ->sortByDesc('total_sisa_hutang')
+            ->take(5)
+            ->values()
+            ->map(fn ($balance) => [
+                'id' => $balance['hutang_id'],
+                'pelanggan' => $balance['pelanggan'],
+                'sisa_hutang' => $balance['total_sisa_hutang'],
+                'tanggal' => $balance['tanggal'],
             ]);
 
         return Inertia::render('dashboard/admin', [
@@ -216,7 +218,7 @@ class DashboardController extends Controller
     /**
      * Dashboard untuk Pelanggan - Personal view
      */
-    private function pelangganDashboard($user): Response
+    private function pelangganDashboard(User $user): Response
     {
         $pelanggan = $user->pelanggan;
 
@@ -247,14 +249,12 @@ class DashboardController extends Controller
                 ->sum('total_penjualan'),
         ];
 
+        $latestHutang = $this->latestHutangForPelanggan((int) $pelanggan->id);
+
         // Hutang summary
         $hutangSummary = [
-            'totalHutang' => Hutang::whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
-                ->where('status', 'belum_lunas')
-                ->sum('sisa_hutang'),
-            'jumlahHutang' => Hutang::whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
-                ->where('status', 'belum_lunas')
-                ->count(),
+            'totalHutang' => (float) ($latestHutang?->sisa_hutang ?? 0),
+            'jumlahHutang' => $latestHutang && (float) $latestHutang->sisa_hutang > 0 ? 1 : 0,
             'totalLunas' => Hutang::whereHas('penjualan', fn ($q) => $q->where('pelanggan_id', $pelanggan->id))
                 ->where('status', 'lunas')
                 ->count(),
@@ -298,5 +298,33 @@ class DashboardController extends Controller
             'pelanggan' => $pelanggan,
             'notLinked' => false,
         ]);
+    }
+
+    private function currentHutangBalances(): Collection
+    {
+        return Hutang::with('penjualan.pelanggan')
+            ->get()
+            ->groupBy(fn (Hutang $hutang) => $hutang->penjualan?->pelanggan?->id ?? 'tanpa-pelanggan')
+            ->map(function (Collection $hutangs) {
+                $latest = $hutangs
+                    ->sortByDesc(fn (Hutang $hutang) => $hutang->tanggal?->format('Y-m-d').'-'.str_pad((string) $hutang->id, 10, '0', STR_PAD_LEFT))
+                    ->first();
+
+                return [
+                    'hutang_id' => $latest->id,
+                    'pelanggan' => $latest->penjualan?->pelanggan?->nama ?? 'Tanpa Pelanggan',
+                    'total_sisa_hutang' => (float) $latest->sisa_hutang,
+                    'tanggal' => $latest->tanggal?->format('d M Y'),
+                ];
+            })
+            ->values();
+    }
+
+    private function latestHutangForPelanggan(int $pelangganId): ?Hutang
+    {
+        return Hutang::whereHas('penjualan', fn ($query) => $query->where('pelanggan_id', $pelangganId))
+            ->orderByDesc('tanggal')
+            ->orderByDesc('id')
+            ->first();
     }
 }

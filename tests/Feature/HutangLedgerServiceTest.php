@@ -124,6 +124,71 @@ class HutangLedgerServiceTest extends TestCase
         $this->assertSame(7214000.0, $service->currentBalanceForPelanggan($pelanggan->id));
     }
 
+    public function test_recalculate_preserves_imported_hutang_amount_when_it_differs_from_quantity_times_price(): void
+    {
+        [$pelanggan, $barang] = $this->makeMasterData();
+
+        $firstPenjualan = Penjualan::create([
+            'no_faktur' => 'INV-PJ-GT-20240717-001',
+            'pelanggan_id' => $pelanggan->id,
+            'barang_id' => $barang->id,
+            'tanggal' => '2024-07-17',
+            'jumlah_kg' => 4000,
+            'harga_per_kg' => 12000,
+            'total_penjualan' => 64050000,
+            'metode_pembayaran' => 'hutang',
+            'hutang' => 48000000,
+            'pembayaran' => 64050000,
+            'sisa_hutang' => 136472500,
+            'status' => 'belum_lunas',
+        ]);
+
+        Hutang::create([
+            'faktur_penjualan' => $firstPenjualan->no_faktur,
+            'penjualan_id' => $firstPenjualan->id,
+            'tanggal' => $firstPenjualan->tanggal,
+            'nilai_faktur' => 48000000,
+            'dp_bayar' => 64050000,
+            'sisa_hutang' => 136472500,
+            'status' => 'belum_lunas',
+        ]);
+
+        $secondPenjualan = Penjualan::create([
+            'no_faktur' => 'INV-PJ-GT-20240718-001',
+            'pelanggan_id' => $pelanggan->id,
+            'barang_id' => $barang->id,
+            'tanggal' => '2024-07-18',
+            'jumlah_kg' => 4000,
+            'harga_per_kg' => 12000,
+            'total_penjualan' => 80000000,
+            'metode_pembayaran' => 'hutang',
+            'hutang' => 30000000,
+            'pembayaran' => 80000000,
+            'sisa_hutang' => 86472500,
+            'status' => 'belum_lunas',
+        ]);
+
+        Hutang::create([
+            'faktur_penjualan' => $secondPenjualan->no_faktur,
+            'penjualan_id' => $secondPenjualan->id,
+            'tanggal' => $secondPenjualan->tanggal,
+            'nilai_faktur' => 30000000,
+            'dp_bayar' => 80000000,
+            'sisa_hutang' => 86472500,
+            'status' => 'belum_lunas',
+        ]);
+
+        $service = app(HutangLedgerService::class);
+        $service->recalculateForPelanggan($pelanggan->id);
+
+        $this->assertDatabaseHas('hutangs', [
+            'penjualan_id' => $secondPenjualan->id,
+            'nilai_faktur' => 30000000,
+            'sisa_hutang' => 86472500,
+        ]);
+        $this->assertSame(86472500.0, $service->currentBalanceForPelanggan($pelanggan->id));
+    }
+
     private function makeMasterData(): array
     {
         $pelanggan = Pelanggan::create([

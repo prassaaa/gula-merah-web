@@ -116,16 +116,16 @@ class HutangLedgerService
 
     private function invoiceAmount(Penjualan $penjualan): float
     {
-        $calculated = (float) $penjualan->jumlah_kg * (float) $penjualan->harga_per_kg;
-
-        if ($calculated > 0) {
-            return $calculated;
-        }
-
         $hutang = (float) $penjualan->hutang;
 
         if ($hutang > 0) {
             return $hutang;
+        }
+
+        $calculated = (float) $penjualan->jumlah_kg * (float) $penjualan->harga_per_kg;
+
+        if ($calculated > 0) {
+            return $calculated;
         }
 
         return (float) $penjualan->total_penjualan;
