@@ -81,12 +81,12 @@ class ARIMAService:
             "bic": round(self.fitted_model.bic, 2),
         }
 
-    def forecast(self, periods: int) -> list[ForecastResult]:
+    def forecast(self, weeks: int) -> list[ForecastResult]:
         """
-        Generate forecast for future periods
+        Generate forecast for future weeks
 
         Args:
-            periods: Number of periods to forecast
+            weeks: Number of weeks to forecast
 
         Returns:
             List of forecast results
@@ -95,7 +95,7 @@ class ARIMAService:
             raise ValueError("Model must be fitted before forecasting")
 
         # Get forecast with confidence intervals
-        forecast_result = self.fitted_model.get_forecast(steps=periods)
+        forecast_result = self.fitted_model.get_forecast(steps=weeks)
         predictions = forecast_result.predicted_mean
         conf_int = forecast_result.conf_int(alpha=0.05)
 
@@ -103,11 +103,14 @@ class ARIMAService:
         last_date = self.series.index[-1]
 
         results = []
-        for i in range(periods):
-            forecast_date = last_date + timedelta(days=i + 1)
+        for i in range(weeks):
+            week_end = last_date + timedelta(days=7 * (i + 1))
+            week_start = week_end - timedelta(days=6)
             results.append(
                 ForecastResult(
-                    date=forecast_date.strftime("%Y-%m-%d"),
+                    week=f"Minggu {i + 1}",
+                    week_start=week_start.strftime("%Y-%m-%d"),
+                    week_end=week_end.strftime("%Y-%m-%d"),
                     value=round(max(0, predictions.iloc[i]), 2),
                     lower_bound=round(max(0, conf_int.iloc[i, 0]), 2),
                     upper_bound=round(max(0, conf_int.iloc[i, 1]), 2),

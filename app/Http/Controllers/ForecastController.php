@@ -39,8 +39,7 @@ class ForecastController extends Controller
             'barang_id' => ['required', 'exists:barangs,id'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'forecast_until' => ['nullable', 'date'],
-            'periods' => ['nullable', 'integer', 'min:1', 'max:365'],
+            'weeks' => ['required', 'integer', 'min:1', 'max:52'],
         ]);
 
         $barangs = Barang::where('is_active', true)->orderBy('nama_barang')->get();
@@ -49,52 +48,79 @@ class ForecastController extends Controller
             ->limit(100)
             ->get();
 
-        // Get historical stock data for ARIMA
-        $stokData = Stok::where('barang_id', $request->barang_id)
+        $stokRows = Stok::where('barang_id', $request->barang_id)
             ->when($request->filled('start_date'), fn ($query) => $query->whereDate('tanggal', '>=', $request->start_date))
             ->when($request->filled('end_date'), fn ($query) => $query->whereDate('tanggal', '<=', $request->end_date))
             ->orderBy('tanggal')
-            ->get()
-            ->map(fn ($s) => [
-                'tanggal' => $s->tanggal?->format('Y-m-d'),
-                'stok_akhir' => (float) $s->stok_akhir,
-            ]);
+            ->get();
 
-        if ($stokData->count() < 10) {
+        $weeklyStokData = $stokRows
+            ->groupBy(fn ($stok) => $stok->tanggal?->copy()->endOfWeek(Carbon::SUNDAY)->format('Y-m-d'))
+            ->values()
+            ->map(function ($weeklyRows, $index) {
+                $latestStock = $weeklyRows->sortBy('tanggal')->last();
+                $weekEnd = $latestStock->tanggal->copy()->endOfWeek(Carbon::SUNDAY);
+                $weekStart = $weekEnd->copy()->startOfWeek(Carbon::MONDAY);
+
+                return [
+                    'week' => 'Minggu '.($index + 1),
+                    'week_start' => $weekStart->format('Y-m-d'),
+                    'week_end' => $weekEnd->format('Y-m-d'),
+                    'tanggal' => $weekEnd->format('Y-m-d'),
+                    'stok_akhir' => (float) $latestStock->stok_akhir,
+                ];
+            });
+
+        if ($weeklyStokData->count() < 10) {
             return Inertia::render('forecast/stok', [
                 'barangs' => BarangResource::collection($barangs)->resolve(),
                 'stoks' => $stoks,
                 'forecast' => [
-                    'error' => 'Data stok tidak cukup untuk forecasting (minimal 10 data).',
+                    'error' => 'Data stok mingguan tidak cukup untuk forecasting (minimal 10 minggu).',
                 ],
+                'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'weeks']),
             ]);
         }
 
         try {
-            $lastDate = $stokData->last()['tanggal'];
-            if ($request->filled('forecast_until') && Carbon::parse($request->forecast_until)->lte(Carbon::parse($lastDate))) {
-                return Inertia::render('forecast/stok', [
-                    'barangs' => BarangResource::collection($barangs)->resolve(),
-                    'stoks' => $stoks,
-                    'forecast' => [
-                        'error' => 'Tanggal akhir prediksi harus setelah tanggal terakhir data histori.',
-                    ],
-                    'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'forecast_until', 'periods']),
-                ]);
-            }
+            $weeks = (int) $request->weeks;
+            $pythonStokData = $weeklyStokData
+                ->map(fn ($weeklyStock) => [
+                    'tanggal' => $weeklyStock['tanggal'],
+                    'stok_akhir' => $weeklyStock['stok_akhir'],
+                ])
+                ->values()
+                ->toArray();
 
-            $periods = $request->filled('forecast_until')
-                ? (int) Carbon::parse($lastDate)->diffInDays(Carbon::parse($request->forecast_until))
-                : (int) ($request->periods ?? 7);
+            $result = $this->pythonApi->forecastStock($pythonStokData, $weeks);
+            $latestActualStock = (float) $weeklyStokData->last()['stok_akhir'];
 
-            $result = $this->pythonApi->forecastStock($stokData->toArray(), $periods);
-            $result['historical'] = $stokData->values()->toArray();
+            $result['historical'] = $weeklyStokData->values()->toArray();
+            $result['weekly_summary'] = collect($result['predictions'] ?? [])
+                ->map(function ($prediction, $index) use ($latestActualStock) {
+                    $predicted = (float) ($prediction['value'] ?? 0);
+                    $difference = round($predicted - $latestActualStock, 2);
+                    $needsRestock = $predicted > $latestActualStock;
+
+                    return [
+                        'week' => $prediction['week'] ?? 'Minggu '.($index + 1),
+                        'week_start' => $prediction['week_start'] ?? null,
+                        'week_end' => $prediction['week_end'] ?? null,
+                        'actual' => round($latestActualStock, 2),
+                        'predicted' => round($predicted, 2),
+                        'difference' => $difference,
+                        'status' => $needsRestock ? 'perlu_restock' : 'aman',
+                        'status_label' => $needsRestock ? 'Kurang '.abs($difference).' kg' : 'Aman',
+                    ];
+                })
+                ->values()
+                ->toArray();
 
             return Inertia::render('forecast/stok', [
                 'barangs' => BarangResource::collection($barangs)->resolve(),
                 'stoks' => $stoks,
                 'forecast' => $result,
-                'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'forecast_until', 'periods']),
+                'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'weeks']),
             ]);
         } catch (\Exception $e) {
             return Inertia::render('forecast/stok', [

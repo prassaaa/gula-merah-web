@@ -16,7 +16,7 @@ async def predict_stock(request: ForecastRequest):
     Predict stock levels using ARIMA model
 
     Args:
-        request: ForecastRequest with historical data and prediction periods
+        request: ForecastRequest with historical weekly data and prediction weeks
 
     Returns:
         ForecastResponse with predictions and metrics
@@ -24,7 +24,7 @@ async def predict_stock(request: ForecastRequest):
     if len(request.data) < 10:
         raise HTTPException(
             status_code=400,
-            detail="Minimum 10 data points required for forecasting"
+            detail="Minimum 10 weekly data points required for forecasting"
         )
 
     try:
@@ -35,11 +35,11 @@ async def predict_stock(request: ForecastRequest):
         metrics = service.fit(request.data)
 
         # Generate forecast
-        predictions = service.forecast(request.periods)
+        predictions = service.forecast(request.weeks)
 
         return ForecastResponse(
             model_used="ARIMA(1,1,1)",
-            periods=request.periods,
+            weeks=request.weeks,
             predictions=predictions,
             metrics=metrics,
         )
@@ -55,7 +55,7 @@ async def forecast_info():
         "model": "ARIMA",
         "description": "AutoRegressive Integrated Moving Average for time series forecasting",
         "default_order": "(1, 1, 1)",
+        "input_frequency": "weekly stock levels using week-ending dates",
         "minimum_data_points": 10,
-        "max_forecast_periods": 365,
+        "max_forecast_weeks": 52,
     }
-

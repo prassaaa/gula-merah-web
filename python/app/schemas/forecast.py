@@ -3,7 +3,7 @@ Pydantic schemas for Stock Forecasting (ARIMA)
 """
 
 from datetime import date, datetime
-from typing import Optional, Union
+from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -31,12 +31,14 @@ class StokData(BaseModel):
 class ForecastRequest(BaseModel):
     """Request schema for stock forecast"""
     data: list[StokData] = Field(..., description="Historical stock data")
-    periods: int = Field(default=7, ge=1, le=365, description="Number of days to forecast")
+    weeks: int = Field(default=7, ge=1, le=52, description="Number of weeks to forecast")
 
 
 class ForecastResult(BaseModel):
     """Single forecast result"""
-    date: str
+    week: str
+    week_start: str
+    week_end: str
     value: float
     lower_bound: float
     upper_bound: float
@@ -45,7 +47,6 @@ class ForecastResult(BaseModel):
 class ForecastResponse(BaseModel):
     """Response schema for stock forecast"""
     model_used: str = "ARIMA"
-    periods: int
+    weeks: int
     predictions: list[ForecastResult]
     metrics: Optional[dict] = Field(default=None, description="Model performance metrics")
-

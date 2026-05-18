@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class PythonApiService
 {
@@ -15,14 +15,14 @@ class PythonApiService
     }
 
     /**
-     * Forecast stock using ARIMA model
+     * Forecast stock by week using ARIMA model
      */
-    public function forecastStock(array $stokData, int $periods): array
+    public function forecastStock(array $stokData, int $weeks): array
     {
         $response = Http::timeout(60)
             ->post("{$this->baseUrl}/api/forecast/predict", [
                 'data' => $stokData,
-                'periods' => $periods,
+                'weeks' => $weeks,
             ]);
 
         if ($response->failed()) {
@@ -73,10 +73,10 @@ class PythonApiService
     {
         try {
             $response = Http::timeout(5)->get("{$this->baseUrl}/health");
+
             return $response->successful();
         } catch (\Exception $e) {
             return false;
         }
     }
 }
-

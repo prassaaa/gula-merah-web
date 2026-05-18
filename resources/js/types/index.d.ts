@@ -255,10 +255,31 @@ export interface DistributionByVehicle {
 
 // Forecast
 export interface ForecastPrediction {
-    date: string;
+    week: string;
+    week_start: string;
+    week_end: string;
     value: number;
     lower_bound: number;
     upper_bound: number;
+}
+
+export interface ForecastHistorical {
+    week: string;
+    week_start: string;
+    week_end: string;
+    tanggal: string;
+    stok_akhir: number;
+}
+
+export interface ForecastWeeklySummary {
+    week: string;
+    week_start: string;
+    week_end: string;
+    actual: number | null;
+    predicted: number;
+    difference: number | null;
+    status: string;
+    status_label: string;
 }
 
 export interface ForecastMetrics {
@@ -271,10 +292,9 @@ export interface ForecastMetrics {
 
 export interface ForecastResult {
     predictions?: ForecastPrediction[];
-    historical?: Array<{
-        tanggal: string;
-        stok_akhir: number;
-    }>;
+    historical?: ForecastHistorical[];
+    weekly_summary?: ForecastWeeklySummary[];
+    weeks?: number;
     metrics?: ForecastMetrics;
     error?: string;
 }
