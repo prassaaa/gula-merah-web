@@ -268,7 +268,7 @@ export interface ForecastHistorical {
     week_start: string;
     week_end: string;
     tanggal: string;
-    stok_akhir: number;
+    jumlah_terjual: number;
 }
 
 export interface ForecastWeeklySummary {
@@ -278,6 +278,9 @@ export interface ForecastWeeklySummary {
     actual: number | null;
     predicted: number;
     difference: number | null;
+    cumulative_predicted?: number;
+    estimated_remaining_stock?: number;
+    shortage?: number;
     status: string;
     status_label: string;
 }
@@ -288,6 +291,13 @@ export interface ForecastMetrics {
     mae?: number;
     aic?: number;
     bic?: number;
+    evaluation_method?: string;
+    train_size?: number;
+    test_size?: number;
+    evaluation_samples?: Array<{
+        actual: number;
+        predicted: number;
+    }>;
 }
 
 export interface ForecastResult {
@@ -296,6 +306,9 @@ export interface ForecastResult {
     weekly_summary?: ForecastWeeklySummary[];
     weeks?: number;
     metrics?: ForecastMetrics;
+    stok_aktual_terakhir?: number;
+    total_kebutuhan_prediksi?: number;
+    estimasi_sisa_stok?: number;
     error?: string;
 }
 

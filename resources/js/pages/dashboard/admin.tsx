@@ -290,13 +290,13 @@ export default function AdminDashboard({ stats, recentSales, stockLevels, topDeb
                                 <TrendingUp className="h-5 w-5" />
                                 AI Forecasting
                             </CardTitle>
-                            <CardDescription>Prediksi stok dan biaya distribusi</CardDescription>
+                            <CardDescription>Prediksi kebutuhan stok dan biaya distribusi</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-4">
                                 <Card className="border-dashed">
                                     <CardHeader className="pb-2">
-                                        <CardTitle className="text-base">Prediksi Stok (ARIMA)</CardTitle>
+                                        <CardTitle className="text-base">Prediksi Kebutuhan Stok</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <Button size="sm" asChild>

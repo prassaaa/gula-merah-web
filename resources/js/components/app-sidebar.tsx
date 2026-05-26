@@ -114,7 +114,7 @@ export function AppSidebar() {
                 title: 'Forecasting',
                 items: [
                     {
-                        title: 'Prediksi Stok (ARIMA)',
+                        title: 'Prediksi Kebutuhan Stok',
                         href: '/forecast/stok',
                         icon: TrendingUp,
                     },

@@ -1,5 +1,5 @@
 """
-Router for Stock Forecasting (ARIMA)
+Router for stock demand forecasting (ARIMA)
 """
 
 from fastapi import APIRouter, HTTPException
@@ -13,10 +13,10 @@ router = APIRouter()
 @router.post("/predict", response_model=ForecastResponse)
 async def predict_stock(request: ForecastRequest):
     """
-    Predict stock levels using ARIMA model
+    Predict weekly stock demand using ARIMA model
 
     Args:
-        request: ForecastRequest with historical weekly data and prediction weeks
+        request: ForecastRequest with historical weekly sales demand and prediction weeks
 
     Returns:
         ForecastResponse with predictions and metrics
@@ -53,9 +53,9 @@ async def forecast_info():
     """Get information about the forecasting model"""
     return {
         "model": "ARIMA",
-        "description": "AutoRegressive Integrated Moving Average for time series forecasting",
+        "description": "AutoRegressive Integrated Moving Average for weekly stock demand forecasting",
         "default_order": "(1, 1, 1)",
-        "input_frequency": "weekly stock levels using week-ending dates",
+        "input_frequency": "weekly sales demand using week-ending dates",
         "minimum_data_points": 10,
         "max_forecast_weeks": 52,
     }

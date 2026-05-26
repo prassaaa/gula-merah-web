@@ -1,5 +1,5 @@
 """
-Pydantic schemas for Stock Forecasting (ARIMA)
+Pydantic schemas for stock demand forecasting (ARIMA)
 """
 
 from datetime import date, datetime
@@ -7,10 +7,10 @@ from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 
 
-class StokData(BaseModel):
-    """Single stock data point - simplified for ARIMA"""
+class KebutuhanStokData(BaseModel):
+    """Single weekly stock demand data point for ARIMA"""
     tanggal: date
-    stok_akhir: float
+    jumlah_terjual: float
 
     @field_validator('tanggal', mode='before')
     @classmethod
@@ -30,7 +30,7 @@ class StokData(BaseModel):
 
 class ForecastRequest(BaseModel):
     """Request schema for stock forecast"""
-    data: list[StokData] = Field(..., description="Historical stock data")
+    data: list[KebutuhanStokData] = Field(..., description="Historical weekly sales demand data")
     weeks: int = Field(default=7, ge=1, le=52, description="Number of weeks to forecast")
 
 

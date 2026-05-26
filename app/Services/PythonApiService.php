@@ -15,13 +15,13 @@ class PythonApiService
     }
 
     /**
-     * Forecast stock by week using ARIMA model
+     * Forecast weekly stock demand using ARIMA model.
      */
-    public function forecastStock(array $stokData, int $weeks): array
+    public function forecastStock(array $demandData, int $weeks): array
     {
         $response = Http::timeout(60)
             ->post("{$this->baseUrl}/api/forecast/predict", [
-                'data' => $stokData,
+                'data' => $demandData,
                 'weeks' => $weeks,
             ]);
 

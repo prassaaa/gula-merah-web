@@ -6,10 +6,12 @@ use App\Http\Resources\BarangResource;
 use App\Http\Resources\DistribusiResource;
 use App\Models\Barang;
 use App\Models\Distribusi;
+use App\Models\Penjualan;
 use App\Models\Stok;
 use App\Services\PythonApiService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,35 +50,16 @@ class ForecastController extends Controller
             ->limit(100)
             ->get();
 
-        $stokRows = Stok::where('barang_id', $request->barang_id)
-            ->when($request->filled('start_date'), fn ($query) => $query->whereDate('tanggal', '>=', $request->start_date))
-            ->when($request->filled('end_date'), fn ($query) => $query->whereDate('tanggal', '<=', $request->end_date))
-            ->orderBy('tanggal')
-            ->get();
+        $weeklyDemandData = $this->weeklyDemandData($request);
+        $latestStock = $this->latestStockForBarang((int) $request->barang_id);
+        $latestStockValue = (float) ($latestStock?->stok_akhir ?? 0);
 
-        $weeklyStokData = $stokRows
-            ->groupBy(fn ($stok) => $stok->tanggal?->copy()->endOfWeek(Carbon::SUNDAY)->format('Y-m-d'))
-            ->values()
-            ->map(function ($weeklyRows, $index) {
-                $latestStock = $weeklyRows->sortBy('tanggal')->last();
-                $weekEnd = $latestStock->tanggal->copy()->endOfWeek(Carbon::SUNDAY);
-                $weekStart = $weekEnd->copy()->startOfWeek(Carbon::MONDAY);
-
-                return [
-                    'week' => 'Minggu '.($index + 1),
-                    'week_start' => $weekStart->format('Y-m-d'),
-                    'week_end' => $weekEnd->format('Y-m-d'),
-                    'tanggal' => $weekEnd->format('Y-m-d'),
-                    'stok_akhir' => (float) $latestStock->stok_akhir,
-                ];
-            });
-
-        if ($weeklyStokData->count() < 10) {
+        if ($weeklyDemandData->count() < 10) {
             return Inertia::render('forecast/stok', [
                 'barangs' => BarangResource::collection($barangs)->resolve(),
                 'stoks' => $stoks,
                 'forecast' => [
-                    'error' => 'Data stok mingguan tidak cukup untuk forecasting (minimal 10 minggu).',
+                    'error' => 'Data penjualan mingguan tidak cukup untuk forecasting kebutuhan stok (minimal 10 minggu).',
                 ],
                 'filters' => $request->only(['barang_id', 'start_date', 'end_date', 'weeks']),
             ]);
@@ -84,33 +67,43 @@ class ForecastController extends Controller
 
         try {
             $weeks = (int) $request->weeks;
-            $pythonStokData = $weeklyStokData
-                ->map(fn ($weeklyStock) => [
-                    'tanggal' => $weeklyStock['tanggal'],
-                    'stok_akhir' => $weeklyStock['stok_akhir'],
+            $pythonDemandData = $weeklyDemandData
+                ->map(fn ($weeklyDemand) => [
+                    'tanggal' => $weeklyDemand['tanggal'],
+                    'jumlah_terjual' => $weeklyDemand['jumlah_terjual'],
                 ])
                 ->values()
                 ->toArray();
 
-            $result = $this->pythonApi->forecastStock($pythonStokData, $weeks);
-            $latestActualStock = (float) $weeklyStokData->last()['stok_akhir'];
+            $result = $this->pythonApi->forecastStock($pythonDemandData, $weeks);
+            $totalPredictedDemand = collect($result['predictions'] ?? [])->sum(fn ($prediction) => (float) ($prediction['value'] ?? 0));
 
-            $result['historical'] = $weeklyStokData->values()->toArray();
+            $result['historical'] = $weeklyDemandData->values()->toArray();
+            $result['stok_aktual_terakhir'] = round($latestStockValue, 2);
+            $result['total_kebutuhan_prediksi'] = round($totalPredictedDemand, 2);
+            $result['estimasi_sisa_stok'] = round($latestStockValue - $totalPredictedDemand, 2);
+
+            $cumulativePredictedDemand = 0.0;
             $result['weekly_summary'] = collect($result['predictions'] ?? [])
-                ->map(function ($prediction, $index) use ($latestActualStock) {
+                ->map(function ($prediction, $index) use ($latestStockValue, &$cumulativePredictedDemand) {
                     $predicted = (float) ($prediction['value'] ?? 0);
-                    $difference = round($predicted - $latestActualStock, 2);
-                    $needsRestock = $predicted > $latestActualStock;
+                    $cumulativePredictedDemand += $predicted;
+                    $estimatedRemainingStock = round($latestStockValue - $cumulativePredictedDemand, 2);
+                    $shortage = round(max(0, -$estimatedRemainingStock), 2);
+                    $needsRestock = $shortage > 0;
 
                     return [
                         'week' => $prediction['week'] ?? 'Minggu '.($index + 1),
                         'week_start' => $prediction['week_start'] ?? null,
                         'week_end' => $prediction['week_end'] ?? null,
-                        'actual' => round($latestActualStock, 2),
+                        'actual' => null,
                         'predicted' => round($predicted, 2),
-                        'difference' => $difference,
+                        'difference' => $estimatedRemainingStock,
+                        'cumulative_predicted' => round($cumulativePredictedDemand, 2),
+                        'estimated_remaining_stock' => $estimatedRemainingStock,
+                        'shortage' => $shortage,
                         'status' => $needsRestock ? 'perlu_restock' : 'aman',
-                        'status_label' => $needsRestock ? 'Kurang '.abs($difference).' kg' : 'Aman',
+                        'status_label' => $needsRestock ? 'Kurang '.$shortage.' kg' : 'Sisa '.$estimatedRemainingStock.' kg',
                     ];
                 })
                 ->values()
@@ -131,6 +124,55 @@ class ForecastController extends Controller
                 ],
             ]);
         }
+    }
+
+    private function weeklyDemandData(Request $request): Collection
+    {
+        $penjualanRows = Penjualan::where('barang_id', $request->barang_id)
+            ->when($request->filled('start_date'), fn ($query) => $query->whereDate('tanggal', '>=', $request->start_date))
+            ->when($request->filled('end_date'), fn ($query) => $query->whereDate('tanggal', '<=', $request->end_date))
+            ->orderBy('tanggal')
+            ->get();
+
+        if ($penjualanRows->isEmpty()) {
+            return collect();
+        }
+
+        $groupedByWeek = $penjualanRows->groupBy(
+            fn ($penjualan) => $penjualan->tanggal?->copy()->endOfWeek(Carbon::SUNDAY)->format('Y-m-d')
+        );
+        $weekKeys = $groupedByWeek->keys()->sort()->values();
+        $weekEnd = Carbon::parse($weekKeys->first());
+        $lastWeekEnd = Carbon::parse($weekKeys->last());
+        $weeklyDemand = collect();
+        $index = 1;
+
+        while ($weekEnd->lessThanOrEqualTo($lastWeekEnd)) {
+            $weekKey = $weekEnd->format('Y-m-d');
+            $weeklyRows = $groupedByWeek->get($weekKey, collect());
+            $weekStart = $weekEnd->copy()->startOfWeek(Carbon::MONDAY);
+
+            $weeklyDemand->push([
+                'week' => 'Minggu '.$index,
+                'week_start' => $weekStart->format('Y-m-d'),
+                'week_end' => $weekEnd->format('Y-m-d'),
+                'tanggal' => $weekEnd->format('Y-m-d'),
+                'jumlah_terjual' => (float) $weeklyRows->sum(fn ($penjualan) => (float) $penjualan->jumlah_kg),
+            ]);
+
+            $weekEnd->addWeek();
+            $index++;
+        }
+
+        return $weeklyDemand;
+    }
+
+    private function latestStockForBarang(int $barangId): ?Stok
+    {
+        return Stok::where('barang_id', $barangId)
+            ->orderByDesc('tanggal')
+            ->orderByDesc('id')
+            ->first();
     }
 
     public function distribusiIndex(): Response

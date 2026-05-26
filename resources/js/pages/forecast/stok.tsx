@@ -42,7 +42,7 @@ interface Props {
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Prediksi Stok (ARIMA)', href: '/forecast/stok' },
+    { title: 'Prediksi Kebutuhan Stok (ARIMA)', href: '/forecast/stok' },
 ];
 
 function MiniLineChart({
@@ -162,35 +162,32 @@ export default function ForecastStok({
     const actualChart =
         forecast?.historical?.map((item) => ({
             label: item.week,
-            value: Number(item.stok_akhir),
+            value: Number(item.jumlah_terjual),
         })) || [];
     const predictedChart =
         forecast?.predictions?.map((item) => ({
             label: item.week,
             value: Number(item.value),
         })) || [];
-    const latestActualStock = forecast?.historical?.at(-1)?.stok_akhir;
-    const highestPredictedStock =
-        predictedChart.length > 0
-            ? Math.max(...predictedChart.map((item) => item.value))
-            : undefined;
-    const lastPredictedStock = predictedChart.at(-1)?.value;
-    const needsRestock = weeklySummary.some(
-        (item) => item.status === 'perlu_restock',
-    );
+    const latestActualStock = forecast?.stok_aktual_terakhir;
+    const totalPredictedDemand = forecast?.total_kebutuhan_prediksi;
+    const estimatedRemainingStock = forecast?.estimasi_sisa_stok;
+    const needsRestock =
+        (estimatedRemainingStock ?? 0) < 0 ||
+        weeklySummary.some((item) => item.status === 'perlu_restock');
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Prediksi Stok (ARIMA)" />
+            <Head title="Prediksi Kebutuhan Stok (ARIMA)" />
 
             <div className="flex flex-col gap-4 p-4">
                 <div>
                     <h1 className="text-2xl font-bold">
-                        Prediksi Stok dengan ARIMA
+                        Prediksi Kebutuhan Stok dengan ARIMA
                     </h1>
                     <p className="text-muted-foreground">
-                        Prediksi stok menggunakan metode ARIMA (AutoRegressive
-                        Integrated Moving Average)
+                        Prediksi kebutuhan stok dari pola penjualan mingguan
+                        menggunakan metode ARIMA
                     </p>
                 </div>
 
@@ -289,7 +286,7 @@ export default function ForecastStok({
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     )}
                                     <TrendingUp className="mr-2 h-4 w-4" />
-                                    Prediksi Stok
+                                    Prediksi Kebutuhan
                                 </Button>
                             </form>
                         </CardContent>
@@ -299,7 +296,8 @@ export default function ForecastStok({
                         <CardHeader>
                             <CardTitle>Hasil Prediksi</CardTitle>
                             <CardDescription>
-                                Prediksi stok untuk periode yang dipilih
+                                Prediksi kebutuhan stok untuk periode yang
+                                dipilih
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -307,8 +305,8 @@ export default function ForecastStok({
                                 <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
                                     <TrendingUp className="mb-4 h-12 w-12" />
                                     <p>
-                                        Pilih barang dan klik "Prediksi Stok"
-                                        untuk melihat hasil
+                                        Pilih barang dan klik "Prediksi
+                                        Kebutuhan" untuk melihat hasil
                                     </p>
                                 </div>
                             ) : forecast.error ? (
@@ -333,23 +331,17 @@ export default function ForecastStok({
                                         </div>
                                         <div className="rounded-lg border p-4">
                                             <p className="text-sm text-muted-foreground">
-                                                Prediksi Tertinggi / Terakhir
+                                                Total Kebutuhan Prediksi
                                             </p>
                                             <p className="text-2xl font-bold">
-                                                {highestPredictedStock != null
-                                                    ? Math.round(
-                                                          highestPredictedStock,
-                                                      )
-                                                    : '-'}{' '}
-                                                /{' '}
-                                                {lastPredictedStock != null
-                                                    ? `${Math.round(lastPredictedStock)} kg`
+                                                {totalPredictedDemand != null
+                                                    ? `${Math.round(totalPredictedDemand)} kg`
                                                     : '-'}
                                             </p>
                                         </div>
                                         <div className="rounded-lg border p-4">
                                             <p className="text-sm text-muted-foreground">
-                                                Status Keseluruhan
+                                                Estimasi Sisa Stok
                                             </p>
                                             <p
                                                 className={
@@ -358,9 +350,14 @@ export default function ForecastStok({
                                                         : 'text-2xl font-bold text-green-600'
                                                 }
                                             >
+                                                {estimatedRemainingStock != null
+                                                    ? `${Math.round(estimatedRemainingStock)} kg`
+                                                    : '-'}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">
                                                 {needsRestock
-                                                    ? 'PERLU RESTOCK'
-                                                    : 'AMAN'}
+                                                    ? 'Perlu restock'
+                                                    : 'Aman'}
                                             </p>
                                         </div>
                                     </div>
@@ -376,10 +373,10 @@ export default function ForecastStok({
                                                         Periode
                                                     </th>
                                                     <th className="p-3 text-right">
-                                                        Data Aktual
+                                                        Prediksi Kebutuhan
                                                     </th>
                                                     <th className="p-3 text-right">
-                                                        Data Prediksi
+                                                        Estimasi Sisa Stok
                                                     </th>
                                                     <th className="p-3 text-left">
                                                         Status
@@ -405,7 +402,6 @@ export default function ForecastStok({
                                                                 className="border-b"
                                                             >
                                                                 <td className="p-3 font-medium">
-                                                                    Minggu{' '}
                                                                     {item.week}
                                                                 </td>
                                                                 <td className="p-3 text-muted-foreground">
@@ -417,17 +413,17 @@ export default function ForecastStok({
                                                                         item.week_end
                                                                     }
                                                                 </td>
-                                                                <td className="p-3 text-right">
-                                                                    {item.actual !=
-                                                                    null
-                                                                        ? `${Math.round(item.actual)} kg`
-                                                                        : '-'}
-                                                                </td>
                                                                 <td className="p-3 text-right font-medium">
                                                                     {Math.round(
                                                                         item.predicted,
                                                                     )}{' '}
                                                                     kg
+                                                                </td>
+                                                                <td className="p-3 text-right">
+                                                                    {item.estimated_remaining_stock !=
+                                                                    null
+                                                                        ? `${Math.round(item.estimated_remaining_stock)} kg`
+                                                                        : '-'}
                                                                 </td>
                                                                 <td className="p-3">
                                                                     <div
@@ -448,10 +444,12 @@ export default function ForecastStok({
                                                                             null && (
                                                                             <div className="text-sm text-muted-foreground">
                                                                                 Kurang{' '}
-                                                                                {Math.abs(
-                                                                                    Math.round(
-                                                                                        item.difference,
-                                                                                    ),
+                                                                                {Math.round(
+                                                                                    item.shortage ??
+                                                                                        Math.abs(
+                                                                                            item.difference ??
+                                                                                                0,
+                                                                                        ),
                                                                                 )}{' '}
                                                                                 kg
                                                                             </div>
@@ -526,10 +524,10 @@ export default function ForecastStok({
                                             <div className="rounded-md border p-4">
                                                 <div className="mb-2 flex gap-4 text-sm">
                                                     <span className="font-medium text-blue-600">
-                                                        Aktual
+                                                        Kebutuhan Aktual
                                                     </span>
                                                     <span className="font-medium text-green-600">
-                                                        Prediksi
+                                                        Prediksi Kebutuhan
                                                     </span>
                                                 </div>
                                                 <MiniLineChart
@@ -548,9 +546,10 @@ export default function ForecastStok({
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Data Historis Stok</CardTitle>
+                        <CardTitle>Data Stok Aktual</CardTitle>
                         <CardDescription>
-                            Data stok yang digunakan untuk training model ARIMA
+                            Referensi stok terakhir yang dipakai untuk status
+                            restock
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
